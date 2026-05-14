@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+
+# Node / npm
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Env / secrets
+.env
+.env.*
+
+# Large HTML captures (SingleFile) can be huge and may contain sensitive data.
+# Uncomment if you do NOT want to commit them.
+# tests/*.html
+# Opcenter Execution (*.html)
+# esignature-form.html
+tests-local/*.html
+tests-local/*.css

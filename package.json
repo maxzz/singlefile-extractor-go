@@ -1,0 +1,26 @@
+{
+    "name": "extractor-from-singlefile",
+    "version": "0.1.0",
+    "description": "Extract an elelement + inline styles from SingleFile-saved HTML into a standalone HTML.",
+    "private": true,
+    "license": "MIT",
+    "scripts": {
+        "extract": "python scripts/singlefile_extractor.py",
+        "extract:help": "python scripts/singlefile_extractor.py --help",
+        "moveout-css": "python scripts/moveout-css.py",
+        "moveout-css:help": "python scripts/moveout-css.py --help",
+        "beautify:html": "python scripts/format-html.py",
+        "beautify:html:help": "python scripts/format-html.py --help",
+        "beautify:css": "python scripts/format-css.py",
+        "beautify:css:help": "python scripts/format-css.py --help",
+        "extract:data-urls": "python scripts/extract-data-urls.py",
+        "extract:data-urls:help": "python scripts/extract-data-urls.py --help",
+        "beautify:smoke": "python scripts/format-html.py --input tests-local/esig.smoke.html",
+        "css": "npm run moveout-css",
+        "css:help": "npm run moveout-css:help",
+        "format": "npm run beautify:html",
+        "format:help": "npm run beautify:html:help",
+        "format:css": "npm run beautify:css",
+        "format:css:help": "npm run beautify:css:help"
+    }
+}
