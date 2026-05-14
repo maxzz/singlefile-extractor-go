@@ -1,26 +1,40 @@
 {
-    "name": "extractor-from-singlefile",
+    "name": "singlefile-extractor-go",
     "version": "0.1.0",
-    "description": "Extract an elelement + inline styles from SingleFile-saved HTML into a standalone HTML.",
+    "description": "Extract an element + inline styles from SingleFile-saved HTML into a standalone HTML (Go port).",
     "private": true,
     "license": "MIT",
     "scripts": {
-        "extract": "python scripts/singlefile_extractor.py",
-        "extract:help": "python scripts/singlefile_extractor.py --help",
-        "moveout-css": "python scripts/moveout-css.py",
-        "moveout-css:help": "python scripts/moveout-css.py --help",
-        "beautify:html": "python scripts/format-html.py",
-        "beautify:html:help": "python scripts/format-html.py --help",
-        "beautify:css": "python scripts/format-css.py",
-        "beautify:css:help": "python scripts/format-css.py --help",
-        "extract:data-urls": "python scripts/extract-data-urls.py",
-        "extract:data-urls:help": "python scripts/extract-data-urls.py --help",
-        "beautify:smoke": "python scripts/format-html.py --input tests-local/esig.smoke.html",
+        "extract": "go run ./cmd/singlefile-extractor extract",
+        "extract:help": "go run ./cmd/singlefile-extractor extract --help",
+
+        "moveout-css": "go run ./cmd/singlefile-extractor moveout-css",
+        "moveout-css:help": "go run ./cmd/singlefile-extractor moveout-css --help",
+
+        "beautify:html": "go run ./cmd/singlefile-extractor format-html",
+        "beautify:html:help": "go run ./cmd/singlefile-extractor format-html --help",
+
+        "beautify:css": "go run ./cmd/singlefile-extractor format-css",
+        "beautify:css:help": "go run ./cmd/singlefile-extractor format-css --help",
+
+        "extract:data-urls": "go run ./cmd/singlefile-extractor extract-data-urls",
+        "extract:data-urls:help": "go run ./cmd/singlefile-extractor extract-data-urls --help",
+
+        "beautify:smoke": "go run ./cmd/singlefile-extractor format-html --input tests-local/esig.smoke.html",
+
         "css": "npm run moveout-css",
         "css:help": "npm run moveout-css:help",
+
         "format": "npm run beautify:html",
         "format:help": "npm run beautify:html:help",
+
         "format:css": "npm run beautify:css",
-        "format:css:help": "npm run beautify:css:help"
+        "format:css:help": "npm run beautify:css:help",
+
+        "build": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && go build -trimpath -o dist/singlefile-extractor ./cmd/singlefile-extractor",
+        "build:win": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && go build -trimpath -o dist/singlefile-extractor.exe ./cmd/singlefile-extractor",
+
+        "go:test": "go test ./...",
+        "go:fmt": "go fmt ./..."
     }
 }

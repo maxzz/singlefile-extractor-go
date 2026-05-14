@@ -6,6 +6,15 @@ __pycache__/
 # Node / npm
 node_modules/
 
+# Go
+dist/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
 # OS
 .DS_Store
 Thumbs.db
