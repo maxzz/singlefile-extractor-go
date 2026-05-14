@@ -4,74 +4,8 @@ Small Go CLI utilities for extracting and post-processing content from **SingleF
 
 This project is a Go port of the original Python scripts. The primary entrypoint is a single CLI binary with subcommands.
 
-## Install (clean machine)
-
-### Prerequisites
-- **Go 1.22+** (required)
-- **Node.js + npm** (optional) — only needed if you want to use the `npm run ...` convenience commands
-
-### Install Go
-- **Windows (PowerShell)**: `winget install -e --id GoLang.Go`
-- **macOS (Homebrew)**: `brew install go`
-- **Linux**: use your distro package manager, or install from [go.dev/dl](https://go.dev/dl)
-
-### Install Node.js (optional)
-- **Windows (PowerShell)**: `winget install -e --id OpenJS.NodeJS.LTS`
-- **macOS (Homebrew)**: `brew install node`
-- **Linux**: install Node.js via your distro package manager, or from [nodejs.org](https://nodejs.org)
-
-### Get the code
-Clone your repo (or download a zip), then `cd` into it:
-
-```powershell
-git clone <YOUR_REPO_URL>
-cd singlefile-extractor-go
-```
-
-### Build a binary
-Build into `dist/`:
-
-```powershell
-npm run build
-# Windows users who prefer an .exe extension:
-npm run build:win
-```
-
-Or build directly with Go:
-
-```powershell
-go build -trimpath -o dist/singlefile-extractor ./cmd/singlefile-extractor
-```
-
-### Run
-Without building (compiles + runs each time):
-
-```powershell
-go run ./cmd/singlefile-extractor --help
-```
-
-Run the built binary:
-
-```powershell
-# Windows
-.\dist\singlefile-extractor --help
-# or, if you used "npm run build:win":
-.\dist\singlefile-extractor.exe --help
-
-# macOS / Linux
-./dist/singlefile-extractor --help
-```
-
-### Install into PATH (optional)
-
-```powershell
-go install ./cmd/singlefile-extractor
-singlefile-extractor --help
-```
-
-On Windows you may need to add `%USERPROFILE%\go\bin` to your `PATH`.
-
 ## Table of contents
+- [`Install (clean machine)`](#install-clean-machine)
 - [`extract`](#extract)
 - [`moveout-css`](#moveout-css)
 - [`format-html`](#format-html)
@@ -250,4 +184,71 @@ npm run extract:data-urls:help
 
 ### Notes / limitations
 - Best-effort parsing (like the other formatters). Works well for typical “minified + embedded assets” CSS, but it’s not a full CSS AST parser.
+
+## Install (clean machine)
+
+### Prerequisites
+- **Go 1.22+** (required)
+- **Node.js + npm** (optional) — only needed if you want to use the `npm run ...` convenience commands
+
+### Install Go
+- **Windows (PowerShell)**: `winget install -e --id GoLang.Go`
+- **macOS (Homebrew)**: `brew install go`
+- **Linux**: use your distro package manager, or install from [go.dev/dl](https://go.dev/dl)
+
+### Install Node.js (optional)
+- **Windows (PowerShell)**: `winget install -e --id OpenJS.NodeJS.LTS`
+- **macOS (Homebrew)**: `brew install node`
+- **Linux**: install Node.js via your distro package manager, or from [nodejs.org](https://nodejs.org)
+
+### Get the code
+Clone your repo (or download a zip), then `cd` into it:
+
+```powershell
+git clone <YOUR_REPO_URL>
+cd singlefile-extractor-go
+```
+
+### Build a binary
+Build into `dist/`:
+
+```powershell
+npm run build
+# Windows users who prefer an .exe extension:
+npm run build:win
+```
+
+Or build directly with Go:
+
+```powershell
+go build -trimpath -o dist/singlefile-extractor ./cmd/singlefile-extractor
+```
+
+### Run
+Without building (compiles + runs each time):
+
+```powershell
+go run ./cmd/singlefile-extractor --help
+```
+
+Run the built binary:
+
+```powershell
+# Windows
+.\dist\singlefile-extractor --help
+# or, if you used "npm run build:win":
+.\dist\singlefile-extractor.exe --help
+
+# macOS / Linux
+./dist/singlefile-extractor --help
+```
+
+### Install into PATH (optional)
+
+```powershell
+go install ./cmd/singlefile-extractor
+singlefile-extractor --help
+```
+
+On Windows you may need to add `%USERPROFILE%\go\bin` to your `PATH`.
 
