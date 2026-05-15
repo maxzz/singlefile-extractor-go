@@ -179,4 +179,3 @@ func isAlpha(b byte) bool {
 func isTagNameChar(b byte) bool {
 	return isAlpha(b) || (b >= '0' && b <= '9') || b == ':' || b == '_' || b == '-'
 }
-

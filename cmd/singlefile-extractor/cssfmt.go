@@ -259,4 +259,3 @@ func formatCSS(cssText string, indent string) string {
 	newline()
 	return removeEmptyRuleSets(string(out))
 }
-

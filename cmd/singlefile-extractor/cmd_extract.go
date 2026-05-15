@@ -366,4 +366,3 @@ func buildOutputHTML(bodyOpen string, styles []string, links []string, formHTML 
 		"</body>\n" +
 		"</html>\n"
 }
-

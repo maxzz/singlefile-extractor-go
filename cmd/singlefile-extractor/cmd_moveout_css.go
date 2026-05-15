@@ -16,11 +16,11 @@ func cmdMoveoutCSS(argv []string) int {
 	defaultInput := filepath.Join(root, "tests", "esignature-form.html")
 
 	var (
-		inputPath   string
-		outputPath  string
-		cssOutPath  string
-		href        string
-		showHelp    bool
+		inputPath  string
+		outputPath string
+		cssOutPath string
+		href       string
+		showHelp   bool
 	)
 
 	fs := flag.NewFlagSet("moveout-css", flag.ContinueOnError)
@@ -112,4 +112,3 @@ func extractStyleContentsMoveout(htmlText string) []string {
 	}
 	return out
 }
-

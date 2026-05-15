@@ -139,4 +139,3 @@ Options:
 	fmt.Printf("- vars: %s\n", varsOut)
 	return 0
 }
-

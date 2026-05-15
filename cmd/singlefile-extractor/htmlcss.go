@@ -168,4 +168,3 @@ func insertStylesheetLinkIndented(htmlText string, href string, indentUnit strin
 	}
 	return headBlock + htmlText
 }
-

@@ -145,14 +145,14 @@ func propertyHint(prop string) string {
 		return "var"
 	}
 	mapping := map[string]string{
-		"background":         "bg",
-		"background-image":   "bg-image",
-		"mask-image":         "mask-image",
-		"content":            "content",
-		"src":                "src",
-		"cursor":             "cursor",
-		"list-style":         "list-style",
-		"list-style-image":   "list-style-image",
+		"background":       "bg",
+		"background-image": "bg-image",
+		"mask-image":       "mask-image",
+		"content":          "content",
+		"src":              "src",
+		"cursor":           "cursor",
+		"list-style":       "list-style",
+		"list-style-image": "list-style-image",
 	}
 	if v, ok := mapping[p]; ok {
 		return v
@@ -467,10 +467,10 @@ func maybeInsertImport(cssText string, href string) string {
 }
 
 type extractDataURLsResult struct {
-	rewrittenCSS      string
-	varsCSS           string
-	extractedVars     int
-	movedCustomProps  int
+	rewrittenCSS     string
+	varsCSS          string
+	extractedVars    int
+	movedCustomProps int
 }
 
 func rewriteCSSExtractDataURLs(
@@ -816,4 +816,3 @@ func rewriteCSSExtractDataURLs(
 		movedCustomProps: movedCustomProps,
 	}, nil
 }
-

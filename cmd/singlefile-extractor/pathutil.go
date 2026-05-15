@@ -20,4 +20,3 @@ func defaultFormattedPath(inputPath string) string {
 	stem := strings.TrimSuffix(filepath.Base(inputPath), ext)
 	return filepath.Join(filepath.Dir(inputPath), stem+"_formatted"+ext)
 }
-

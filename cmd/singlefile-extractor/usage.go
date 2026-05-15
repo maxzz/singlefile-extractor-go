@@ -25,4 +25,3 @@ Commands:
 Run "<command> --help" for command-specific flags.
 `)
 }
-

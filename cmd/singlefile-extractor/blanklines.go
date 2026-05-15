@@ -45,4 +45,3 @@ func collapseBlankLines(text string, maxConsecutive int) string {
 	}
 	return result
 }
-

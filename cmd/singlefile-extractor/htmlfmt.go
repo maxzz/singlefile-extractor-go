@@ -36,22 +36,22 @@ var (
 	}
 
 	impliedCloseOnOpen = map[string]map[string]bool{
-		"li":      {"li": true},
-		"dt":      {"dt": true, "dd": true},
-		"dd":      {"dt": true, "dd": true},
-		"option":  {"option": true},
+		"li":       {"li": true},
+		"dt":       {"dt": true, "dd": true},
+		"dd":       {"dt": true, "dd": true},
+		"option":   {"option": true},
 		"optgroup": {"option": true},
-		"td":      {"td": true, "th": true},
-		"th":      {"td": true, "th": true},
-		"tr":      {"td": true, "th": true, "tr": true},
-		"thead":   {"td": true, "th": true, "tr": true, "thead": true, "tbody": true, "tfoot": true},
-		"tbody":   {"td": true, "th": true, "tr": true, "thead": true, "tbody": true, "tfoot": true},
-		"tfoot":   {"td": true, "th": true, "tr": true, "thead": true, "tbody": true, "tfoot": true},
+		"td":       {"td": true, "th": true},
+		"th":       {"td": true, "th": true},
+		"tr":       {"td": true, "th": true, "tr": true},
+		"thead":    {"td": true, "th": true, "tr": true, "thead": true, "tbody": true, "tfoot": true},
+		"tbody":    {"td": true, "th": true, "tr": true, "thead": true, "tbody": true, "tfoot": true},
+		"tfoot":    {"td": true, "th": true, "tr": true, "thead": true, "tbody": true, "tfoot": true},
 	}
 
-	fmtStyleBlockRe = regexp.MustCompile(`(?ims)^[ \t]*<style\b[^>]*>(.*?)</style>[ \t]*\r?\n?`)
+	fmtStyleBlockRe        = regexp.MustCompile(`(?ims)^[ \t]*<style\b[^>]*>(.*?)</style>[ \t]*\r?\n?`)
 	fmtLinkStylesheetTagRe = regexp.MustCompile(`(?i)<link\b[^>]*\brel\s*=\s*(?:"stylesheet"|'stylesheet'|stylesheet)\b[^>]*>`)
-	fmtHrefAttrRe = regexp.MustCompile(`(?i)\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))`)
+	fmtHrefAttrRe          = regexp.MustCompile(`(?i)\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))`)
 )
 
 func tokenizeHTML(htmlText string) []htmlToken {
@@ -246,4 +246,3 @@ func firstNonEmpty(s ...string) string {
 	}
 	return ""
 }
-

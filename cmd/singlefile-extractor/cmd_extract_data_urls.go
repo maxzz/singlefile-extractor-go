@@ -9,13 +9,13 @@ import (
 )
 
 type extractDataURLsArgs struct {
-	inputPath         string
-	outputPath        string
-	varsOutputPath    string
-	minVarURLLen      int
-	varPrefix         string
-	noImport          bool
-	importHref        string
+	inputPath      string
+	outputPath     string
+	varsOutputPath string
+	minVarURLLen   int
+	varPrefix      string
+	noImport       bool
+	importHref     string
 }
 
 func cmdExtractDataURLs(argv []string) int {
@@ -130,4 +130,3 @@ func runExtractDataURLs(args extractDataURLsArgs) error {
 	fmt.Printf("- moved root custom props (min_len=%d): %d\n", args.minVarURLLen, res.movedCustomProps)
 	return nil
 }
-

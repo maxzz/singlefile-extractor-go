@@ -74,4 +74,3 @@ func style(enabled bool, code string, s string) string {
 func wroteLabel() string { return style(colors.stdout, ansiBold+ansiGreen, "Wrote:") }
 func noteLabel() string  { return style(colors.stderr, ansiBold+ansiYellow, "Note:") }
 func errLabel() string   { return style(colors.stderr, ansiBold+ansiRed, "Error:") }
-

@@ -35,4 +35,3 @@ func run(args []string) int {
 		return 2
 	}
 }
-
