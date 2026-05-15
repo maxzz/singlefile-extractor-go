@@ -31,20 +31,18 @@ Specifically it:
 From this repo folder:
 
 ```powershell
-go run ./cmd/singlefile-extractor extract
+go run ./cmd/singlefile-extractor extract --input "Some SingleFile.html" --output "out.html"
 ```
-
-By default, it reads `tests/original-with-iframe.hml` and writes `tests/esignature-form.html`.
 
 You can also run via npm:
 
 ```powershell
-npm run extract
+npm run extract -- --input "Some SingleFile.html" --output "out.html"
 npm run extract:help
 ```
 
 ### Options
-- `-i, --input`: Path to the SingleFile-saved HTML file.
+- `-i, --input`: Path to the SingleFile-saved HTML file. (required)
 - `-o, --output`: Where to write the extracted standalone HTML.
 - `--form-id`: The id of the `<form>` element to extract (default: `aspnetForm`).
 - `--contains`: Optional substring filter to disambiguate when multiple matches exist (example: `ESigCaptureVP.aspx`).

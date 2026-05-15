@@ -29,7 +29,6 @@ var (
 
 func cmdExtract(argv []string) int {
 	root := repoRoot()
-	defaultInput := filepath.Join(root, "tests", "original-with-iframe.hml")
 	defaultOutput := filepath.Join(root, "tests", "esignature-form.html")
 
 	var (
@@ -55,8 +54,8 @@ Options:
 		fs.PrintDefaults()
 	}
 
-	fs.StringVar(&inputPath, "input", defaultInput, "Path to the SingleFile-saved HTML file.")
-	fs.StringVar(&inputPath, "i", defaultInput, "Path to the SingleFile-saved HTML file.")
+	fs.StringVar(&inputPath, "input", "", "Path to the SingleFile-saved HTML file. (required)")
+	fs.StringVar(&inputPath, "i", "", "Path to the SingleFile-saved HTML file. (required)")
 	fs.StringVar(&outputPath, "output", defaultOutput, "Where to write the extracted standalone HTML.")
 	fs.StringVar(&outputPath, "o", defaultOutput, "Where to write the extracted standalone HTML.")
 	fs.StringVar(&formID, "form-id", "aspnetForm", "The id of the <form> element to extract (default: aspnetForm).")
@@ -73,6 +72,13 @@ Options:
 	if showHelp {
 		fs.Usage()
 		return 0
+	}
+
+	if strings.TrimSpace(inputPath) == "" {
+		msg := "Missing required --input. Pass --input <path> to a SingleFile-saved HTML."
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", noteLabel(), style(colors.stderr, ansiYellow, msg))
+		fs.Usage()
+		return 2
 	}
 
 	outerHTML, err := readFileText(inputPath)
