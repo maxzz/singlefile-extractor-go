@@ -302,23 +302,43 @@ func extractFormAndStyles(targetHTML string, formID string) (bodyOpen string, st
 	styles = extractStyleTagRe.FindAllString(targetHTML, -1)
 	links = extractLinkStylesheet.FindAllString(targetHTML, -1)
 
-	escaped := regexp.QuoteMeta(formID)
-	formRe := regexp.MustCompile(fmt.Sprintf(
-		`(?i)<form\b[^>]*\bid\s*=\s*(?:"%s"|'%s'|%s)(?=[\s>/])`,
-		escaped, escaped, escaped,
-	))
-	loc := formRe.FindStringIndex(targetHTML)
-	if loc == nil {
+	targetID := strings.ToLower(formID)
+	start := -1
+	tagEnd := -1
+
+	i := 0
+	n := len(targetHTML)
+	for i < n {
+		if targetHTML[i] != '<' {
+			i++
+			continue
+		}
+		tagStart := i
+		tagText, next := parseTag(targetHTML, i)
+		i = next
+
+		if tagName(tagText) != "form" || isClosingTag(tagText) {
+			continue
+		}
+		attrs := parseTagAttributes(tagText)
+		id := strings.ToLower(strings.TrimSpace(attrs["id"]))
+		if id == targetID {
+			start = tagStart
+			tagEnd = next
+			break
+		}
+	}
+
+	if start < 0 || tagEnd < 0 {
 		return "", nil, nil, "", fmt.Errorf("Could not find <form id=%s> in target srcdoc HTML.", formID)
 	}
-	start := loc[0]
 
 	lower := strings.ToLower(targetHTML)
-	endRel := strings.Index(lower[loc[1]:], extractFormCloseTagLow)
+	endRel := strings.Index(lower[tagEnd:], extractFormCloseTagLow)
 	if endRel < 0 {
 		return "", nil, nil, "", fmt.Errorf("Could not locate </form> end tag for %s.", formID)
 	}
-	end := loc[1] + endRel
+	end := tagEnd + endRel
 
 	formHTML = targetHTML[start : end+len(extractFormCloseTagLow)]
 	return bodyM, styles, links, formHTML, nil

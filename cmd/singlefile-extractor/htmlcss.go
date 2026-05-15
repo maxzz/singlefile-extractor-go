@@ -24,12 +24,39 @@ func computeDefaultHref(outHTML string, cssOut string) string {
 }
 
 func hasStylesheetLink(htmlText string, href string) bool {
-	escaped := regexp.QuoteMeta(href)
-	re := regexp.MustCompile(fmt.Sprintf(
-		`(?i)<link\b[^>]*\brel\s*=\s*(?:"stylesheet"|'stylesheet'|stylesheet)\b[^>]*\bhref\s*=\s*(?:"%s"|'%s'|%s)(?=[\s>/])`,
-		escaped, escaped, escaped,
-	))
-	return re.FindStringIndex(htmlText) != nil
+	targetHref := strings.TrimSpace(href)
+	if targetHref == "" {
+		return false
+	}
+
+	i := 0
+	n := len(htmlText)
+	for i < n {
+		if htmlText[i] != '<' {
+			i++
+			continue
+		}
+
+		tagText, next := parseTag(htmlText, i)
+		i = next
+
+		if tagName(tagText) != "link" || isClosingTag(tagText) {
+			continue
+		}
+
+		attrs := parseTagAttributes(tagText)
+		rel := strings.TrimSpace(attrs["rel"])
+		if !strings.EqualFold(rel, "stylesheet") {
+			continue
+		}
+
+		hrefVal := strings.TrimSpace(attrs["href"])
+		if strings.EqualFold(hrefVal, targetHref) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func insertStylesheetLinkSimple(htmlText string, href string) string {
