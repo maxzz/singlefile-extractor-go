@@ -27,25 +27,35 @@ func cmdFormatHTML(argv []string) int {
 	fs := flag.NewFlagSet("format-html", flag.ContinueOnError)
 	fs.SetOutput(os.Stdout)
 	fs.Usage = func() {
-		fmt.Fprint(os.Stdout, `Format (pretty-print) an HTML file with indentation.
-
-By default it also runs a CSS pipeline:
+		printUsage(fs.Output(), usageSpec{
+			Summary:   "Format (pretty-print) an HTML file with indentation.",
+			UsageLine: "singlefile-extractor format-html --input <path> [options]",
+			Options: []optionHelp{
+				{Short: "i", Long: "input", Arg: "<path>", Desc: "Path to the HTML file to format. (required)"},
+				{Short: "o", Long: "output", Arg: "<path>", Desc: `Where to write the formatted HTML. (default: next to --input with suffix "_formatted")`},
+				{Long: "indent", Arg: "<n>", Desc: "Spaces per indent level. (default: 2)"},
+				{Long: "no-css-pipeline", Desc: "Disable the default CSS pipeline (format HTML only)."},
+				{Long: "css-output", Arg: "<path>", Desc: `Where to write extracted CSS when <style> blocks exist. (default: "<output_stem>.css")`},
+				{Long: "css-href", Arg: "<href>", Desc: "Override the href used in the inserted <link rel=stylesheet> tag. (default: relative path to --css-output)"},
+				{Long: "data-urls-vars-output", Arg: "<path>", Desc: `Where to write extracted data-url custom properties. (default: "<css_stem>_dataurls-vars.css")`},
+				{Long: "data-urls-min-var-url-length", Arg: "<n>", Desc: "Only move existing :root custom properties into vars file when the data: URL length is >= this value. (default: 500)"},
+				{Long: "data-urls-var-prefix", Arg: "<prefix>", Desc: `Prefix used for generated custom properties. (default: "data-url")`},
+				{Long: "data-urls-no-import", Desc: "Do not insert an @import for the vars file into the rewritten CSS."},
+				{Long: "data-urls-import-href", Arg: "<href>", Desc: "Override the href used in the inserted @import. (default: relative path to vars file)"},
+				{Short: "h", Long: "help", Desc: "Show help."},
+			},
+			Footer: strings.TrimSpace(`
+Default CSS pipeline:
 - extracts inline <style> blocks into a separate CSS file (and inserts a <link rel="stylesheet">)
 - runs extract-data-urls on that CSS so url(data:...) values are moved into a vars file and referenced via var(--...)
-- beautifies the rewritten CSS
-
-Usage:
-  singlefile-extractor format-html [options]
-
-Options:
-`)
-		fs.PrintDefaults()
+- beautifies the rewritten CSS`),
+		})
 	}
 
 	fs.StringVar(&inputPath, "input", "", "Path to the HTML file to format. (required)")
 	fs.StringVar(&inputPath, "i", "", "Path to the HTML file to format. (required)")
-	fs.StringVar(&outputPath, "output", "", `Where to write the formatted HTML (default: "<input>_formatted.html").`)
-	fs.StringVar(&outputPath, "o", "", `Where to write the formatted HTML (default: "<input>_formatted.html").`)
+	fs.StringVar(&outputPath, "output", "", `Where to write the formatted HTML (default: next to --input with suffix "_formatted").`)
+	fs.StringVar(&outputPath, "o", "", `Where to write the formatted HTML (default: next to --input with suffix "_formatted").`)
 	fs.IntVar(&indentSpaces, "indent", 2, "Spaces per indent level (default: 2).")
 	fs.BoolVar(&noCSSPipeline, "no-css-pipeline", false, "Disable the default CSS pipeline (format HTML only).")
 	fs.StringVar(&cssOutputPath, "css-output", "", `Where to write extracted CSS when <style> blocks exist (default: "<output_stem>.css").`)

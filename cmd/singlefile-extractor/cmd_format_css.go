@@ -25,22 +25,32 @@ func cmdFormatCSS(argv []string) int {
 	fs := flag.NewFlagSet("format-css", flag.ContinueOnError)
 	fs.SetOutput(os.Stdout)
 	fs.Usage = func() {
-		fmt.Fprint(os.Stdout, `Format (pretty-print) a CSS file with indentation.
-
-By default it also extracts url(data:...) into a separate vars file and rewrites the CSS to reference them.
-
-Usage:
-  singlefile-extractor format-css [options]
-
-Options:
-`)
-		fs.PrintDefaults()
+		printUsage(fs.Output(), usageSpec{
+			Summary:   "Format (pretty-print) a CSS file with indentation.",
+			UsageLine: "singlefile-extractor format-css --input <path> [options]",
+			Options: []optionHelp{
+				{Short: "i", Long: "input", Arg: "<path>", Desc: "Path to the CSS file to format. (required)"},
+				{Short: "o", Long: "output", Arg: "<path>", Desc: `Where to write the formatted CSS. (default: next to --input with suffix "_formatted")`},
+				{Long: "indent", Arg: "<n>", Desc: "Spaces per indent level. (default: 2)"},
+				{Long: "no-extract-data-urls", Desc: "Disable automatic extraction of url(data:...) into a separate vars file."},
+				{Long: "data-urls-vars-output", Arg: "<path>", Desc: `Where to write extracted data-url custom properties. (default: "<output_stem>_dataurls-vars.css")`},
+				{Long: "data-urls-min-var-url-length", Arg: "<n>", Desc: "Only move existing :root custom properties into vars file when the data: URL length is >= this value. (default: 500)"},
+				{Long: "data-urls-var-prefix", Arg: "<prefix>", Desc: `Prefix used for generated custom properties. (default: "data-url")`},
+				{Long: "data-urls-no-import", Desc: "Do not insert an @import for the vars file into the rewritten CSS."},
+				{Long: "data-urls-import-href", Arg: "<href>", Desc: "Override the href used in the inserted @import. (default: relative path to vars file)"},
+				{Short: "h", Long: "help", Desc: "Show help."},
+			},
+			Footer: strings.TrimSpace(`
+Default behavior:
+- formats CSS with indentation
+- by default, also extracts url(data:...) into a separate vars file and rewrites the CSS to reference them`),
+		})
 	}
 
 	fs.StringVar(&inputPath, "input", "", "Path to the CSS file to format. (required)")
 	fs.StringVar(&inputPath, "i", "", "Path to the CSS file to format. (required)")
-	fs.StringVar(&outputPath, "output", "", `Where to write the formatted CSS (default: "<input>_formatted.css").`)
-	fs.StringVar(&outputPath, "o", "", `Where to write the formatted CSS (default: "<input>_formatted.css").`)
+	fs.StringVar(&outputPath, "output", "", `Where to write the formatted CSS (default: next to --input with suffix "_formatted").`)
+	fs.StringVar(&outputPath, "o", "", `Where to write the formatted CSS (default: next to --input with suffix "_formatted").`)
 	fs.IntVar(&indentSpaces, "indent", 2, "Spaces per indent level (default: 2).")
 	fs.BoolVar(&noExtractDataURLs, "no-extract-data-urls", false, "Disable automatic extraction of url(data:...) into a separate vars file.")
 	fs.StringVar(&dataURLsVarsOutput, "data-urls-vars-output", "", `Where to write extracted data-url custom properties (default: "<output_stem>_dataurls-vars.css").`)

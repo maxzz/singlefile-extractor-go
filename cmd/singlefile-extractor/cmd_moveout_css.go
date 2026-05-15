@@ -22,14 +22,17 @@ func cmdMoveoutCSS(argv []string) int {
 	fs := flag.NewFlagSet("moveout-css", flag.ContinueOnError)
 	fs.SetOutput(os.Stdout)
 	fs.Usage = func() {
-		fmt.Fprint(os.Stdout, `Move inline <style> CSS blocks into a separate .css file and link it from the HTML.
-
-Usage:
-  singlefile-extractor moveout-css [options]
-
-Options:
-`)
-		fs.PrintDefaults()
+		printUsage(fs.Output(), usageSpec{
+			Summary:   "Move inline <style> CSS blocks into a separate .css file and link it from the HTML.",
+			UsageLine: "singlefile-extractor moveout-css --input <path> [options]",
+			Options: []optionHelp{
+				{Short: "i", Long: "input", Arg: "<path>", Desc: "Path to the HTML file to process. (required)"},
+				{Short: "o", Long: "output", Arg: "<path>", Desc: `Where to write the updated HTML. (default: next to --input with suffix ".external-css")`},
+				{Long: "css-output", Arg: "<path>", Desc: "Where to write extracted CSS. (default: <output>.css)"},
+				{Long: "href", Arg: "<href>", Desc: "Optional href to use in the inserted <link> tag. (default: relative path to --css-output)"},
+				{Short: "h", Long: "help", Desc: "Show help."},
+			},
+		})
 	}
 
 	fs.StringVar(&inputPath, "input", "", "Path to the HTML file to process. (required)")

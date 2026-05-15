@@ -39,15 +39,18 @@ func cmdExtract(argv []string) int {
 	fs := flag.NewFlagSet("extract", flag.ContinueOnError)
 	fs.SetOutput(os.Stdout)
 	fs.Usage = func() {
-		fmt.Fprint(os.Stdout, `Extract a <form id=...> and related inline styles from a SingleFile HTML
-(nested iframe srcdoc) into a standalone HTML.
-
-Usage:
-  singlefile-extractor extract [options]
-
-Options:
-`)
-		fs.PrintDefaults()
+		printUsage(fs.Output(), usageSpec{
+			Summary:   "Extract a <form id=...> and related inline styles from a SingleFile HTML (nested iframe srcdoc) into a standalone HTML.",
+			UsageLine: "singlefile-extractor extract --input <path> [options]",
+			Options: []optionHelp{
+				{Short: "i", Long: "input", Arg: "<path>", Desc: "Path to the SingleFile-saved HTML file. (required)"},
+				{Short: "o", Long: "output", Arg: "<path>", Desc: `Where to write the extracted standalone HTML. (default: next to --input with suffix "_extracted")`},
+				{Long: "form-id", Arg: "<id>", Desc: `The id of the <form> element to extract. (default: "aspnetForm")`},
+				{Long: "contains", Arg: "<substring>", Desc: "Optional substring to disambiguate when multiple matching forms exist (e.g. ESigCaptureVP.aspx)."},
+				{Long: "max-depth", Arg: "<n>", Desc: "Max depth to recurse through nested iframe[srcdoc]. (default: 10)"},
+				{Short: "h", Long: "help", Desc: "Show help."},
+			},
+		})
 	}
 
 	fs.StringVar(&inputPath, "input", "", "Path to the SingleFile-saved HTML file. (required)")

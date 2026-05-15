@@ -33,21 +33,27 @@ func cmdExtractDataURLs(argv []string) int {
 	fs := flag.NewFlagSet("extract-data-urls", flag.ContinueOnError)
 	fs.SetOutput(os.Stdout)
 	fs.Usage = func() {
-		fmt.Fprint(os.Stdout, `Extract url(data:...) occurrences into an external CSS variables file and rewrite the main CSS to reference them.
-
-Usage:
-  singlefile-extractor extract-data-urls [options]
-
-Options:
-`)
-		fs.PrintDefaults()
+		printUsage(fs.Output(), usageSpec{
+			Summary:   "Extract url(data:...) occurrences into an external CSS variables file and rewrite the main CSS to reference them.",
+			UsageLine: "singlefile-extractor extract-data-urls --input <path> [options]",
+			Options: []optionHelp{
+				{Short: "i", Long: "input", Arg: "<path>", Desc: "Path to the CSS file to process. (required)"},
+				{Short: "o", Long: "output", Arg: "<path>", Desc: `Where to write the rewritten CSS. (default: next to --input with suffix "_dataurls_extracted")`},
+				{Long: "vars-output", Arg: "<path>", Desc: `Where to write extracted CSS custom properties. (default: next to --output with suffix "_vars")`},
+				{Long: "min-var-url-length", Arg: "<n>", Desc: "Only move existing :root custom properties into vars file if their data: URL length is >= this value. (default: 500)"},
+				{Long: "var-prefix", Arg: "<prefix>", Desc: `Prefix used for generated custom properties. (default: "data-url")`},
+				{Long: "no-import", Desc: "Do not insert an @import for the vars file into the rewritten CSS."},
+				{Long: "import-href", Arg: "<href>", Desc: "Override the href used in the inserted @import. (default: relative path to --vars-output)"},
+				{Short: "h", Long: "help", Desc: "Show help."},
+			},
+		})
 	}
 
 	fs.StringVar(&inputPath, "input", "", "Path to the CSS file to process. (required)")
 	fs.StringVar(&inputPath, "i", "", "Path to the CSS file to process. (required)")
-	fs.StringVar(&outputPath, "output", "", `Where to write the rewritten CSS (default: "<input>_dataurls_extracted.css").`)
-	fs.StringVar(&outputPath, "o", "", `Where to write the rewritten CSS (default: "<input>_dataurls_extracted.css").`)
-	fs.StringVar(&varsOutputPath, "vars-output", "", `Where to write extracted CSS custom properties (default: "<output>_vars.css").`)
+	fs.StringVar(&outputPath, "output", "", `Where to write the rewritten CSS (default: next to --input with suffix "_dataurls_extracted").`)
+	fs.StringVar(&outputPath, "o", "", `Where to write the rewritten CSS (default: next to --input with suffix "_dataurls_extracted").`)
+	fs.StringVar(&varsOutputPath, "vars-output", "", `Where to write extracted CSS custom properties (default: next to --output with suffix "_vars").`)
 	fs.IntVar(&minVarURLLen, "min-var-url-length", 500, "Only move existing :root custom properties into vars file if their data: URL length is >= this value (default: 500).")
 	fs.StringVar(&varPrefix, "var-prefix", "data-url", `Prefix used for generated custom properties (default: "data-url", results in names like --data-url-... ).`)
 	fs.BoolVar(&noImport, "no-import", false, "Do not insert an @import for the vars file into the rewritten CSS.")
