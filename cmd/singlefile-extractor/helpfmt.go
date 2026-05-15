@@ -14,10 +14,12 @@ type optionHelp struct {
 }
 
 type usageSpec struct {
-	Summary   string
-	UsageLine string
-	Options   []optionHelp
-	Footer    string // optional (printed after options)
+	Summary              string
+	UsageLine            string
+	Options              []optionHelp
+	OtherCommandsHeading string
+	OtherCommands        []commandHelp
+	Footer               string // optional (printed after other commands)
 }
 
 func printUsage(w io.Writer, spec usageSpec) {
@@ -51,6 +53,16 @@ func printUsage(w io.Writer, spec usageSpec) {
 			}
 			fmt.Fprintf(w, "  %-*s %s\n", colWidth, left, desc)
 		}
+	}
+
+	if len(spec.OtherCommands) > 0 {
+		heading := strings.TrimSpace(spec.OtherCommandsHeading)
+		if heading == "" {
+			heading = "Other commands"
+		}
+		fmt.Fprintln(w)
+		fmt.Fprintf(w, "%s:\n", heading)
+		writeCommandTable(w, spec.OtherCommands)
 	}
 
 	footer := strings.TrimSpace(spec.Footer)

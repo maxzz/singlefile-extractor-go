@@ -40,6 +40,8 @@ func cmdFormatCSS(argv []string) int {
 				{Long: "data-urls-import-href", Arg: "<href>", Desc: "Override the href used in the inserted @import. (default: relative path to vars file)"},
 				{Short: "h", Long: "help", Desc: "Show help."},
 			},
+			OtherCommandsHeading: "Other commands",
+			OtherCommands:        otherCommands("format-css"),
 			Footer: strings.TrimSpace(`
 Default behavior:
 - formats CSS with indentation

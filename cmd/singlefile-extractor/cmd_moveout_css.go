@@ -32,6 +32,8 @@ func cmdMoveoutCSS(argv []string) int {
 				{Long: "href", Arg: "<href>", Desc: "Optional href to use in the inserted <link> tag. (default: relative path to --css-output)"},
 				{Short: "h", Long: "help", Desc: "Show help."},
 			},
+			OtherCommandsHeading: "Other commands",
+			OtherCommands:        otherCommands("moveout-css"),
 		})
 	}
 

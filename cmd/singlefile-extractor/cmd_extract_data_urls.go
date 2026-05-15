@@ -46,6 +46,8 @@ func cmdExtractDataURLs(argv []string) int {
 				{Long: "import-href", Arg: "<href>", Desc: "Override the href used in the inserted @import. (default: relative path to --vars-output)"},
 				{Short: "h", Long: "help", Desc: "Show help."},
 			},
+			OtherCommandsHeading: "Other commands",
+			OtherCommands:        otherCommands("extract-data-urls"),
 		})
 	}
 

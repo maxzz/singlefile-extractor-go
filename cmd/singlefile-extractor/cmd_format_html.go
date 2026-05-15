@@ -44,6 +44,8 @@ func cmdFormatHTML(argv []string) int {
 				{Long: "data-urls-import-href", Arg: "<href>", Desc: "Override the href used in the inserted @import. (default: relative path to vars file)"},
 				{Short: "h", Long: "help", Desc: "Show help."},
 			},
+			OtherCommandsHeading: "Other commands",
+			OtherCommands:        otherCommands("format-html"),
 			Footer: strings.TrimSpace(`
 Default CSS pipeline:
 - extracts inline <style> blocks into a separate CSS file (and inserts a <link rel="stylesheet">)

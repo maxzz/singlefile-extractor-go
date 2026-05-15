@@ -50,6 +50,8 @@ func cmdExtract(argv []string) int {
 				{Long: "max-depth", Arg: "<n>", Desc: "Max depth to recurse through nested iframe[srcdoc]. (default: 10)"},
 				{Short: "h", Long: "help", Desc: "Show help."},
 			},
+			OtherCommandsHeading: "Other commands",
+			OtherCommands:        otherCommands("extract"),
 		})
 	}
 

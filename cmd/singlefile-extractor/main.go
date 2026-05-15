@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -20,6 +21,12 @@ func run(args []string) int {
 	}
 
 	cmd := args[0]
+	if strings.HasPrefix(cmd, "-") && hasValidInputFlag(args) {
+		// Default command: if no command is provided but --input/-i is, treat it as
+		// "format-html".
+		return cmdFormatHTML(args)
+	}
+
 	subArgs := args[1:]
 
 	switch cmd {

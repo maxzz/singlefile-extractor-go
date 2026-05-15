@@ -112,6 +112,12 @@ If `--output` is omitted, it writes `<input_stem>_formatted<ext>` next to the in
 go run ./cmd/singlefile-extractor format-html --input "tests\esignature-form.html"
 ```
 
+Tip: if you omit the command, it defaults to `format-html` when `--input`/`-i` is provided:
+
+```powershell
+go run ./cmd/singlefile-extractor --input "tests\esignature-form.html"
+```
+
 Example with explicit output + indent:
 
 ```powershell

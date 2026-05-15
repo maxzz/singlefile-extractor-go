@@ -10,18 +10,13 @@ func isHelpArg(s string) bool {
 }
 
 func printRootUsage(w io.Writer) {
-	fmt.Fprint(w, `singlefile-extractor utilities (Go)
-
-Usage:
-  singlefile-extractor <command> [options]
-
-Commands:
-  extract             Extract a <form id=...> from nested iframe[srcdoc] HTML
-  moveout-css         Move inline <style> blocks into a separate .css file
-  format-html         Pretty-print HTML (optionally runs a CSS pipeline)
-  format-css          Pretty-print CSS (optionally extracts url(data:...) to vars)
-  extract-data-urls   Extract url(data:...) into a vars CSS file + rewrite CSS
-
-Run "<command> --help" for command-specific flags.
-`)
+	fmt.Fprintln(w, "singlefile-extractor utilities (Go)")
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, "Usage:")
+	fmt.Fprintln(w, "  singlefile-extractor <command> [options]")
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, "Commands:")
+	writeCommandTable(w, allCommands)
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, `Run "<command> --help" for command-specific flags.`)
 }
