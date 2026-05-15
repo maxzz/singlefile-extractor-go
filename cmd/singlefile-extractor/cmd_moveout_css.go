@@ -34,8 +34,8 @@ Options:
 
 	fs.StringVar(&inputPath, "input", "", "Path to the HTML file to process. (required)")
 	fs.StringVar(&inputPath, "i", "", "Path to the HTML file to process. (required)")
-	fs.StringVar(&outputPath, "output", "", "Where to write the updated HTML (default: overwrite --input).")
-	fs.StringVar(&outputPath, "o", "", "Where to write the updated HTML (default: overwrite --input).")
+	fs.StringVar(&outputPath, "output", "", `Where to write the updated HTML (default: next to --input with suffix ".external-css").`)
+	fs.StringVar(&outputPath, "o", "", `Where to write the updated HTML (default: next to --input with suffix ".external-css").`)
 	fs.StringVar(&cssOutPath, "css-output", "", "Where to write extracted CSS (default: <output>.css).")
 	fs.StringVar(&href, "href", "", "Optional href to use in the inserted <link> tag (default: relative path to --css-output).")
 	fs.BoolVar(&showHelp, "help", false, "Show help.")
@@ -59,7 +59,7 @@ Options:
 	}
 
 	if outputPath == "" {
-		outputPath = inputPath
+		outputPath = defaultMoveoutCSSOutputHTMLPath(inputPath)
 	}
 	if cssOutPath == "" {
 		cssOutPath = replaceExt(outputPath, ".css")

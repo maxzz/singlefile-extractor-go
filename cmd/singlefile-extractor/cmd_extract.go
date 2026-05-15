@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -28,9 +27,6 @@ var (
 )
 
 func cmdExtract(argv []string) int {
-	root := repoRoot()
-	defaultOutput := filepath.Join(root, "tests", "esignature-form.html")
-
 	var (
 		inputPath  string
 		outputPath string
@@ -56,8 +52,8 @@ Options:
 
 	fs.StringVar(&inputPath, "input", "", "Path to the SingleFile-saved HTML file. (required)")
 	fs.StringVar(&inputPath, "i", "", "Path to the SingleFile-saved HTML file. (required)")
-	fs.StringVar(&outputPath, "output", defaultOutput, "Where to write the extracted standalone HTML.")
-	fs.StringVar(&outputPath, "o", defaultOutput, "Where to write the extracted standalone HTML.")
+	fs.StringVar(&outputPath, "output", "", `Where to write the extracted standalone HTML (default: next to --input with suffix "_extracted").`)
+	fs.StringVar(&outputPath, "o", "", `Where to write the extracted standalone HTML (default: next to --input with suffix "_extracted").`)
 	fs.StringVar(&formID, "form-id", "aspnetForm", "The id of the <form> element to extract (default: aspnetForm).")
 	fs.StringVar(&contains, "contains", "", "Optional substring to disambiguate when multiple matching forms exist (e.g. ESigCaptureVP.aspx).")
 	fs.IntVar(&maxDepth, "max-depth", 10, "Max depth to recurse through nested iframe[srcdoc] (default: 10).")
@@ -79,6 +75,10 @@ Options:
 		fmt.Fprintf(os.Stderr, "%s %s\n\n", noteLabel(), style(colors.stderr, ansiYellow, msg))
 		fs.Usage()
 		return 2
+	}
+
+	if strings.TrimSpace(outputPath) == "" {
+		outputPath = defaultExtractOutputPath(inputPath)
 	}
 
 	outerHTML, err := readFileText(inputPath)

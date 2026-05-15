@@ -31,19 +31,19 @@ Specifically it:
 From this repo folder:
 
 ```powershell
-go run ./cmd/singlefile-extractor extract --input "Some SingleFile.html" --output "out.html"
+go run ./cmd/singlefile-extractor extract --input "Some SingleFile.html"
 ```
 
 You can also run via npm:
 
 ```powershell
-npm run extract -- --input "Some SingleFile.html" --output "out.html"
+npm run extract -- --input "Some SingleFile.html"
 npm run extract:help
 ```
 
 ### Options
 - `-i, --input`: Path to the SingleFile-saved HTML file. (required)
-- `-o, --output`: Where to write the extracted standalone HTML.
+- `-o, --output`: Where to write the extracted standalone HTML (default: next to `--input` with suffix `_extracted` and the same extension).
 - `--form-id`: The id of the `<form>` element to extract (default: `aspnetForm`).
 - `--contains`: Optional substring filter to disambiguate when multiple matches exist (example: `ESigCaptureVP.aspx`).
 - `--max-depth`: Max depth to recurse through nested `iframe[srcdoc]` (default: `10`).
@@ -75,16 +75,18 @@ Get-ChildItem -Filter *.html | ForEach-Object {
 Moves all inline `<style>...</style>` blocks from an HTML file into a separate `.css` file, removes the `<style>` blocks from the HTML, and inserts a `<link rel="stylesheet" href="...">` back into the HTML `<head>`.
 
 ### How to run (Windows / PowerShell)
-Safe (write to new files):
+If `--output` is omitted, it writes next to the input file with suffix `.external-css` (same extension), and writes CSS to `<output>.css`.
+
+Safe (write to new files, to a different folder):
 
 ```powershell
 go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests-local\esignature-form.external-css.html" --css-output "tests-local\esignature-form.external-css.css"
 ```
 
-In-place (overwrites `--input`):
+In-place (overwrite `--input`):
 
 ```powershell
-go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html"
+go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests\esignature-form.html" --css-output "tests\esignature-form.css"
 ```
 
 Full CLI help:
@@ -104,7 +106,7 @@ By default it also runs a **CSS pipeline**:
 - beautifies the rewritten CSS for readability
 
 ### How to run (Windows / PowerShell)
-If `--output` is omitted, it writes `<input_stem>_formatted.html` next to the input file.
+If `--output` is omitted, it writes `<input_stem>_formatted<ext>` next to the input file.
 
 ```powershell
 go run ./cmd/singlefile-extractor format-html --input "tests\esignature-form.html"
@@ -137,7 +139,7 @@ By default it also runs **Data URL extraction** (same logic as `extract-data-url
 - rewrites the formatted CSS to reference them via `var(--...)` and adds an `@import` for the vars file
 
 ### How to run (Windows / PowerShell)
-If `--output` is omitted, it writes `<input_stem>_formatted.css` next to the input file.
+If `--output` is omitted, it writes `<input_stem>_formatted<ext>` next to the input file.
 
 ```powershell
 go run ./cmd/singlefile-extractor format-css --input "tests-local\esig.smoke.css"
@@ -166,6 +168,7 @@ Scans a CSS file for `url(data:...)` usages, **moves those data URLs into a sepa
 It can also move existing `:root` custom properties (like `--sf-img-*`) into the vars file when their `data:` URL exceeds a configurable length threshold.
 
 ### How to run (Windows / PowerShell)
+If `--output` is omitted, it writes next to the input file with suffix `_dataurls_extracted` (same extension), and writes `<output_stem>_vars<ext>` next to it.
 
 ```powershell
 go run ./cmd/singlefile-extractor extract-data-urls --input "tests-local\esig.smoke_formatted.css" --output "tests-local\esig.smoke_no-dataurls.css" --vars-output "tests-local\esig.smoke_dataurls-vars.css"
@@ -176,7 +179,7 @@ By default, it also inserts an `@import` at the top of the rewritten CSS so the 
 You can also run via npm:
 
 ```powershell
-npm run extract:data-urls
+npm run extract:data-urls -- --input "in.css"
 npm run extract:data-urls:help
 ```
 
