@@ -9,9 +9,6 @@ import (
 )
 
 func cmdFormatHTML(argv []string) int {
-	root := repoRoot()
-	defaultInput := filepath.Join(root, "tests", "esignature-form.html")
-
 	var (
 		inputPath               string
 		outputPath              string
@@ -45,8 +42,8 @@ Options:
 		fs.PrintDefaults()
 	}
 
-	fs.StringVar(&inputPath, "input", defaultInput, "Path to the HTML file to format.")
-	fs.StringVar(&inputPath, "i", defaultInput, "Path to the HTML file to format.")
+	fs.StringVar(&inputPath, "input", "", "Path to the HTML file to format. (required)")
+	fs.StringVar(&inputPath, "i", "", "Path to the HTML file to format. (required)")
 	fs.StringVar(&outputPath, "output", "", `Where to write the formatted HTML (default: "<input>_formatted.html").`)
 	fs.StringVar(&outputPath, "o", "", `Where to write the formatted HTML (default: "<input>_formatted.html").`)
 	fs.IntVar(&indentSpaces, "indent", 2, "Spaces per indent level (default: 2).")
@@ -69,6 +66,13 @@ Options:
 	if showHelp {
 		fs.Usage()
 		return 0
+	}
+
+	if strings.TrimSpace(inputPath) == "" {
+		msg := "Missing required --input. Pass --input <path> to an HTML file."
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", noteLabel(), style(colors.stderr, ansiYellow, msg))
+		fs.Usage()
+		return 2
 	}
 
 	if indentSpaces < 0 {

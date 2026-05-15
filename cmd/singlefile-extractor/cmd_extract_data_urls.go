@@ -19,9 +19,6 @@ type extractDataURLsArgs struct {
 }
 
 func cmdExtractDataURLs(argv []string) int {
-	root := repoRoot()
-	defaultInput := filepath.Join(root, "tests-local", "esig.smoke_formatted.css")
-
 	var (
 		inputPath      string
 		outputPath     string
@@ -46,8 +43,8 @@ Options:
 		fs.PrintDefaults()
 	}
 
-	fs.StringVar(&inputPath, "input", defaultInput, "Path to the CSS file to process.")
-	fs.StringVar(&inputPath, "i", defaultInput, "Path to the CSS file to process.")
+	fs.StringVar(&inputPath, "input", "", "Path to the CSS file to process. (required)")
+	fs.StringVar(&inputPath, "i", "", "Path to the CSS file to process. (required)")
 	fs.StringVar(&outputPath, "output", "", `Where to write the rewritten CSS (default: "<input>_dataurls_extracted.css").`)
 	fs.StringVar(&outputPath, "o", "", `Where to write the rewritten CSS (default: "<input>_dataurls_extracted.css").`)
 	fs.StringVar(&varsOutputPath, "vars-output", "", `Where to write extracted CSS custom properties (default: "<output>_vars.css").`)
@@ -66,6 +63,13 @@ Options:
 	if showHelp {
 		fs.Usage()
 		return 0
+	}
+
+	if strings.TrimSpace(inputPath) == "" {
+		msg := "Missing required --input. Pass --input <path> to a CSS file."
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", noteLabel(), style(colors.stderr, ansiYellow, msg))
+		fs.Usage()
+		return 2
 	}
 
 	outCSS := outputPath

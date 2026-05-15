@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -12,9 +11,6 @@ import (
 var moveoutStyleBlockRe = regexp.MustCompile(`(?is)<style\b[^>]*>(.*?)</style>`)
 
 func cmdMoveoutCSS(argv []string) int {
-	root := repoRoot()
-	defaultInput := filepath.Join(root, "tests", "esignature-form.html")
-
 	var (
 		inputPath  string
 		outputPath string
@@ -36,8 +32,8 @@ Options:
 		fs.PrintDefaults()
 	}
 
-	fs.StringVar(&inputPath, "input", defaultInput, "Path to the HTML file to process.")
-	fs.StringVar(&inputPath, "i", defaultInput, "Path to the HTML file to process.")
+	fs.StringVar(&inputPath, "input", "", "Path to the HTML file to process. (required)")
+	fs.StringVar(&inputPath, "i", "", "Path to the HTML file to process. (required)")
 	fs.StringVar(&outputPath, "output", "", "Where to write the updated HTML (default: overwrite --input).")
 	fs.StringVar(&outputPath, "o", "", "Where to write the updated HTML (default: overwrite --input).")
 	fs.StringVar(&cssOutPath, "css-output", "", "Where to write extracted CSS (default: <output>.css).")
@@ -53,6 +49,13 @@ Options:
 	if showHelp {
 		fs.Usage()
 		return 0
+	}
+
+	if strings.TrimSpace(inputPath) == "" {
+		msg := "Missing required --input. Pass --input <path> to an HTML file."
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", noteLabel(), style(colors.stderr, ansiYellow, msg))
+		fs.Usage()
+		return 2
 	}
 
 	if outputPath == "" {
