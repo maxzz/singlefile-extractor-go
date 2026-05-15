@@ -134,7 +134,7 @@ Options:
 
 		targetDoc = pickBestExtractMatch(matches)
 		fmt.Fprint(os.Stderr,
-			"Note: multiple matching documents found; auto-selected the deepest match.\n"+
+			noteLabel()+" multiple matching documents found; auto-selected the deepest match.\n"+
 				"      Use --contains <substring> to force a different one if needed.\n"+
 				fmt.Sprintf("      Selected: %s\n", strings.Join(targetDoc.path, " > ")),
 		)
@@ -152,7 +152,7 @@ Options:
 		return 1
 	}
 
-	fmt.Printf("Wrote: %s\n", outputPath)
+	fmt.Printf("%s %s\n", wroteLabel(), outputPath)
 	fmt.Printf("- extracted form id: %s\n", formID)
 	fmt.Printf("- source iframe path: %s\n", strings.Join(targetDoc.path, " > "))
 	fmt.Printf("- styles: %d\n", len(styles))

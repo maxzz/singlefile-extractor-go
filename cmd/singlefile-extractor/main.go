@@ -30,7 +30,7 @@ func run(args []string) int {
 	case "extract-data-urls":
 		return cmdExtractDataURLs(subArgs)
 	default:
-		fmt.Fprintf(os.Stderr, "Unknown command: %s\n\n", cmd)
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", errLabel(), cmd)
 		printRootUsage(os.Stderr)
 		return 2
 	}

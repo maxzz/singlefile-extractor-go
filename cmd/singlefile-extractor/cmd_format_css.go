@@ -89,7 +89,7 @@ Options:
 	}
 
 	if noExtractDataURLs {
-		fmt.Printf("Wrote: %s\n", outPath)
+		fmt.Printf("%s %s\n", wroteLabel(), outPath)
 		fmt.Printf("- input: %s\n", inputPath)
 		fmt.Printf("- indent: %d spaces\n", indentSpaces)
 		fmt.Printf("- chars: %d\n", len(formatted))

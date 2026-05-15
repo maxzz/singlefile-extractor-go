@@ -94,8 +94,8 @@ Options:
 		return 1
 	}
 
-	fmt.Printf("Wrote: %s\n", outputPath)
-	fmt.Printf("Wrote: %s\n", cssOutPath)
+	fmt.Printf("%s %s\n", wroteLabel(), outputPath)
+	fmt.Printf("%s %s\n", wroteLabel(), cssOutPath)
 	fmt.Printf("- extracted style blocks: %d\n", len(cssChunks))
 	fmt.Printf("- css chars: %d\n", len(cssText))
 	fmt.Printf("- link href: %s\n", hrefUse)

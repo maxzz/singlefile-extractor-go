@@ -124,8 +124,8 @@ func runExtractDataURLs(args extractDataURLsArgs) error {
 		return fmt.Errorf("failed to write: %s\n%w", args.varsOutputPath, err)
 	}
 
-	fmt.Printf("Wrote: %s\n", args.outputPath)
-	fmt.Printf("Wrote: %s\n", args.varsOutputPath)
+	fmt.Printf("%s %s\n", wroteLabel(), args.outputPath)
+	fmt.Printf("%s %s\n", wroteLabel(), args.varsOutputPath)
 	fmt.Printf("- extracted vars: %d\n", res.extractedVars)
 	fmt.Printf("- moved root custom props (min_len=%d): %d\n", args.minVarURLLen, res.movedCustomProps)
 	return nil
