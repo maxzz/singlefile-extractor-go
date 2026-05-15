@@ -34,7 +34,7 @@ From this repo folder:
 go run ./cmd/singlefile-extractor extract
 ```
 
-By default, it reads `tests/Opcenter Execution (4_28_2026 3：06：53 PM).html` and writes `tests/esignature-form.html`.
+By default, it reads `tests/original-with-iframe.hml` and writes `tests/esignature-form.html`.
 
 You can also run via npm:
 

@@ -29,7 +29,7 @@ var (
 
 func cmdExtract(argv []string) int {
 	root := repoRoot()
-	defaultInput := filepath.Join(root, "tests", "Opcenter Execution (4_28_2026 3：06：53 PM).html")
+	defaultInput := filepath.Join(root, "tests", "original-with-iframe.hml")
 	defaultOutput := filepath.Join(root, "tests", "esignature-form.html")
 
 	var (
