@@ -148,9 +148,7 @@ func insertStylesheetLinkIndented(htmlText string, href string, indentUnit strin
 		if !strings.HasSuffix(prefix, "\n") {
 			prefix += "\n"
 		}
-		if strings.HasPrefix(suffix, "\n") {
-			suffix = suffix[1:]
-		}
+		suffix = strings.TrimPrefix(suffix, "\n")
 		return prefix + childIndent + linkTag + "\n" + suffix
 	}
 

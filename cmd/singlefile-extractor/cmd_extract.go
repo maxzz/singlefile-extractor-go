@@ -115,7 +115,8 @@ Options:
 		if contains != "" {
 			var b strings.Builder
 			fmt.Fprintf(&b, "Found multiple nested documents containing <form id=%s> (%d matches), even after filtering by --contains.\n", formID, len(matches))
-			fmt.Fprintln(&b, "Refine --contains to something more specific.\n")
+			fmt.Fprintln(&b, "Refine --contains to something more specific.")
+			fmt.Fprintln(&b)
 			fmt.Fprintln(&b, "Matches (iframe path):")
 			limit := len(matches)
 			if limit > 20 {
