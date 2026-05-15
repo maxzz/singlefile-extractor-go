@@ -31,3 +31,4 @@ Desktop.ini
 # esignature-form.html
 tests-local/*.html
 tests-local/*.css
+!tests-local/esig.smoke.html
