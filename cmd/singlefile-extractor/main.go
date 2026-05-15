@@ -7,7 +7,7 @@ import (
 
 func main() {
 	code := run(os.Args[1:])
-	if code != 0 {
+	if code != 0 && shouldPrintExitStatusLine() {
 		fmt.Fprintln(os.Stderr, exitStatusLine(code))
 	}
 	os.Exit(code)
