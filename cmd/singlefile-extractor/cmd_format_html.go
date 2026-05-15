@@ -96,7 +96,7 @@ Options:
 			fmt.Fprintf(os.Stderr, "Failed to write output: %s\n%v\n", outPath, err)
 			return 1
 		}
-		fmt.Printf("%s %s\n", outLabelSuccess("Wrote:"), outPath)
+		fmt.Printf("Wrote: %s\n", outPath)
 		fmt.Printf("- input: %s\n", inputPath)
 		fmt.Printf("- indent: %d spaces\n", indentSpaces)
 		fmt.Printf("- chars: %d\n", len(formatted))
@@ -209,7 +209,7 @@ Options:
 		}
 	}
 
-	fmt.Printf("%s %s\n", outLabelSuccess("Wrote:"), outPath)
+	fmt.Printf("Wrote: %s\n", outPath)
 	fmt.Printf("- input: %s\n", inputPath)
 	fmt.Printf("- indent: %d spaces\n", indentSpaces)
 	if len(cssFiles) > 0 {
