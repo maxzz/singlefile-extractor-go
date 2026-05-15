@@ -62,7 +62,7 @@ Default behavior:
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, warnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -79,7 +79,7 @@ Default behavior:
 	}
 
 	if indentSpaces < 0 {
-		fmt.Fprintln(os.Stderr, "--indent must be >= 0")
+		fmt.Fprintln(os.Stderr, warnText("--indent must be >= 0"))
 		return 2
 	}
 
@@ -90,7 +90,7 @@ Default behavior:
 
 	cssText, err := readFileText(inputPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to read input: %s\n%v\n", inputPath, err)
+		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
 	}
 
@@ -98,7 +98,7 @@ Default behavior:
 	formatted := formatCSS(cssText, indentUnit)
 
 	if err := writeFileText(outPath, formatted); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to write output: %s\n%v\n", outPath, err)
+		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
 		return 1
 	}
 
@@ -111,7 +111,7 @@ Default behavior:
 	}
 
 	if dataURLsMinVarURLLength < 0 {
-		fmt.Fprintln(os.Stderr, "--data-urls-min-var-url-length must be >= 0")
+		fmt.Fprintln(os.Stderr, warnText("--data-urls-min-var-url-length must be >= 0"))
 		return 2
 	}
 
@@ -132,18 +132,18 @@ Default behavior:
 		noImport:       dataURLsNoImport,
 		importHref:     dataURLsImportHref,
 	}); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, warnText(err.Error()))
 		return 1
 	}
 
 	// Re-format after rewrite (extractor focuses on transformations, not formatting).
 	rewritten, err := readFileText(outPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to read rewritten CSS: %s\n%v\n", outPath, err)
+		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read rewritten CSS: %s\n%v\n", outPath, err)))
 		return 1
 	}
 	if err := writeFileText(outPath, formatCSS(rewritten, indentUnit)); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to write formatted CSS: %s\n%v\n", outPath, err)
+		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write formatted CSS: %s\n%v\n", outPath, err)))
 		return 1
 	}
 

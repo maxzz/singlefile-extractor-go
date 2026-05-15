@@ -64,7 +64,7 @@ func cmdExtract(argv []string) int {
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, warnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -86,7 +86,7 @@ func cmdExtract(argv []string) int {
 
 	outerHTML, err := readFileText(inputPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to read input: %s\n%v\n", inputPath, err)
+		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
 	}
 
@@ -115,7 +115,7 @@ func cmdExtract(argv []string) int {
 		if contains != "" {
 			fmt.Fprintf(&b, "- contains filter: %q\n", contains)
 		}
-		fmt.Fprint(os.Stderr, b.String())
+		fmt.Fprint(os.Stderr, warnText(b.String()))
 		return 1
 	}
 
@@ -138,7 +138,7 @@ func cmdExtract(argv []string) int {
 			if len(matches) > 20 {
 				fmt.Fprintf(&b, "... and %d more\n", len(matches)-20)
 			}
-			fmt.Fprint(os.Stderr, b.String())
+			fmt.Fprint(os.Stderr, warnText(b.String()))
 			return 1
 		}
 
@@ -152,13 +152,13 @@ func cmdExtract(argv []string) int {
 
 	bodyOpen, styles, links, formHTML, err := extractFormAndStyles(targetDoc.html, formID)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, warnText(err.Error()))
 		return 1
 	}
 	outputHTML := buildOutputHTML(bodyOpen, styles, links, formHTML)
 
 	if err := writeFileText(outputPath, outputHTML); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to write output: %s\n%v\n", outputPath, err)
+		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outputPath, err)))
 		return 1
 	}
 

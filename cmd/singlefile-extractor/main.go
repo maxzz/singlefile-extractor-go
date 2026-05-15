@@ -6,7 +6,11 @@ import (
 )
 
 func main() {
-	os.Exit(run(os.Args[1:]))
+	code := run(os.Args[1:])
+	if code != 0 {
+		fmt.Fprintln(os.Stderr, exitStatusLine(code))
+	}
+	os.Exit(code)
 }
 
 func run(args []string) int {

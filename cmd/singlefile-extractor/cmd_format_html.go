@@ -69,7 +69,7 @@ Default CSS pipeline:
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, warnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -86,7 +86,7 @@ Default CSS pipeline:
 	}
 
 	if indentSpaces < 0 {
-		fmt.Fprintln(os.Stderr, "--indent must be >= 0")
+		fmt.Fprintln(os.Stderr, warnText("--indent must be >= 0"))
 		return 2
 	}
 	indentUnit := strings.Repeat(" ", indentSpaces)
@@ -98,7 +98,7 @@ Default CSS pipeline:
 
 	htmlText, err := readFileText(inputPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to read input: %s\n%v\n", inputPath, err)
+		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
 	}
 
@@ -107,7 +107,7 @@ Default CSS pipeline:
 
 	if noCSSPipeline {
 		if err := writeFileText(outPath, formatted); err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to write output: %s\n%v\n", outPath, err)
+			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
 			return 1
 		}
 		fmt.Printf("%s %s\n", wroteLabel(), outPath)
@@ -130,7 +130,7 @@ Default CSS pipeline:
 		cssText := strings.Join(styleChunks, "\n\n")
 		cssText = strings.TrimRight(cssText, "\r\n") + "\n"
 		if err := writeFileText(cssOut, cssText); err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to write CSS: %s\n%v\n", cssOut, err)
+			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssOut, err)))
 			return 1
 		}
 
@@ -144,14 +144,14 @@ Default CSS pipeline:
 		htmlLinked = collapseBlankLines(htmlLinked, 2)
 
 		if err := writeFileText(outPath, htmlLinked); err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to write HTML: %s\n%v\n", outPath, err)
+			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outPath, err)))
 			return 1
 		}
 
 		cssFiles = append(cssFiles, cssOut)
 	} else {
 		if err := writeFileText(outPath, formatted); err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to write HTML: %s\n%v\n", outPath, err)
+			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outPath, err)))
 			return 1
 		}
 
@@ -177,11 +177,11 @@ Default CSS pipeline:
 
 	if len(cssFiles) > 0 {
 		if dataURLsMinVarURLLength < 0 {
-			fmt.Fprintln(os.Stderr, "--data-urls-min-var-url-length must be >= 0")
+			fmt.Fprintln(os.Stderr, warnText("--data-urls-min-var-url-length must be >= 0"))
 			return 2
 		}
 		if dataURLsVarsOutput != "" && len(cssFiles) > 1 {
-			fmt.Fprintln(os.Stderr, "--data-urls-vars-output can only be used when processing a single CSS file.")
+			fmt.Fprintln(os.Stderr, warnText("--data-urls-vars-output can only be used when processing a single CSS file."))
 			return 2
 		}
 
@@ -202,7 +202,7 @@ Default CSS pipeline:
 				noImport:       dataURLsNoImport,
 				importHref:     dataURLsImportHref,
 			}); err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintln(os.Stderr, warnText(err.Error()))
 				return 1
 			}
 			varsFiles = append(varsFiles, varsOut)
@@ -213,11 +213,11 @@ Default CSS pipeline:
 		for _, cssPath := range cssFiles {
 			cssText, err := readFileText(cssPath)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Failed to read CSS: %s\n%v\n", cssPath, err)
+				fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read CSS: %s\n%v\n", cssPath, err)))
 				return 1
 			}
 			if err := writeFileText(cssPath, formatCSS(cssText, cssIndent)); err != nil {
-				fmt.Fprintf(os.Stderr, "Failed to write CSS: %s\n%v\n", cssPath, err)
+				fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssPath, err)))
 				return 1
 			}
 		}

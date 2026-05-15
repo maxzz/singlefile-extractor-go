@@ -62,7 +62,7 @@ func cmdExtractDataURLs(argv []string) int {
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, warnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -102,7 +102,7 @@ func cmdExtractDataURLs(argv []string) int {
 	}
 
 	if err := runExtractDataURLs(args); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, warnText(err.Error()))
 		return 1
 	}
 	return 0
