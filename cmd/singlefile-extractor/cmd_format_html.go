@@ -231,7 +231,9 @@ Default CSS pipeline:
 				fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read CSS: %s\n%v\n", cssPath, err)))
 				return 1
 			}
-			if err := writeFileText(cssPath, formatCSS(cssText, cssIndent)); err != nil {
+			formattedCSS := formatCSS(cssText, cssIndent)
+			formattedCSS = fixCSSLintErrors(formattedCSS)
+			if err := writeFileText(cssPath, formattedCSS); err != nil {
 				fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssPath, err)))
 				return 1
 			}

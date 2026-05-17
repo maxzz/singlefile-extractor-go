@@ -98,7 +98,7 @@ Default behavior:
 	}
 
 	indentUnit := strings.Repeat(" ", indentSpaces)
-	formatted := formatCSS(cssText, indentUnit)
+	formatted := fixCSSLintErrors(formatCSS(cssText, indentUnit))
 
 	if err := writeFileText(outPath, formatted); err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
@@ -145,7 +145,7 @@ Default behavior:
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read rewritten CSS: %s\n%v\n", outPath, err)))
 		return 1
 	}
-	if err := writeFileText(outPath, formatCSS(rewritten, indentUnit)); err != nil {
+	if err := writeFileText(outPath, fixCSSLintErrors(formatCSS(rewritten, indentUnit))); err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write formatted CSS: %s\n%v\n", outPath, err)))
 		return 1
 	}
