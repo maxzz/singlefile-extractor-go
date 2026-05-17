@@ -148,7 +148,11 @@ func parseTagAttributes(tagText string) map[string]string {
 				}
 			} else {
 				startVal := i
-				for i < len(s) && !isSpaceByte(s[i]) && s[i] != '/' {
+				for i < len(s) && !isSpaceByte(s[i]) && s[i] != '>' {
+					// Treat "/>" as the end of the tag, not part of the value.
+					if s[i] == '/' && i+1 < len(s) && s[i+1] == '>' {
+						break
+					}
 					i++
 				}
 				val = s[startVal:i]

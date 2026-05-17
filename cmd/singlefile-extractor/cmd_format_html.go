@@ -14,6 +14,7 @@ func cmdFormatHTML(argv []string) int {
 		outputPath              string
 		indentSpaces            int
 		noCSSPipeline           bool
+		noExtractDataAssets     bool
 		cssOutputPath           string
 		cssHref                 string
 		dataURLsVarsOutput      string
@@ -35,6 +36,7 @@ func cmdFormatHTML(argv []string) int {
 				{Short: "o", Long: "output", Arg: "<path>", Desc: `Where to write the formatted HTML. (default: next to --input with suffix "_formatted")`},
 				{Long: "indent", Arg: "<n>", Desc: "Spaces per indent level. (default: 2)"},
 				{Long: "no-css-pipeline", Desc: "Disable the default CSS pipeline (format HTML only)."},
+				{Long: "no-extract-data-assets", Desc: `Disable extracting data: images from <link href> and <img src> into files next to the output HTML.`},
 				{Long: "css-output", Arg: "<path>", Desc: `Where to write extracted CSS when <style> blocks exist. (default: "<output_stem>.css")`},
 				{Long: "css-href", Arg: "<href>", Desc: "Override the href used in the inserted <link rel=stylesheet> tag. (default: relative path to --css-output)"},
 				{Long: "data-urls-vars-output", Arg: "<path>", Desc: `Where to write extracted data-url custom properties. (default: "<css_stem>_dataurls-vars.css")`},
@@ -60,6 +62,7 @@ Default CSS pipeline:
 	fs.StringVar(&outputPath, "o", "", `Where to write the formatted HTML (default: next to --input with suffix "_formatted").`)
 	fs.IntVar(&indentSpaces, "indent", 2, "Spaces per indent level (default: 2).")
 	fs.BoolVar(&noCSSPipeline, "no-css-pipeline", false, "Disable the default CSS pipeline (format HTML only).")
+	fs.BoolVar(&noExtractDataAssets, "no-extract-data-assets", false, "Disable extracting data: images from <link href> and <img src> into files next to the output HTML.")
 	fs.StringVar(&cssOutputPath, "css-output", "", `Where to write extracted CSS when <style> blocks exist (default: "<output_stem>.css").`)
 	fs.StringVar(&cssHref, "css-href", "", "Override the href used in the inserted <link rel=stylesheet> tag (default: relative path to --css-output).")
 	fs.StringVar(&dataURLsVarsOutput, "data-urls-vars-output", "", `Where to write extracted data-url custom properties (default: "<css_stem>_dataurls-vars.css").`)
@@ -108,19 +111,36 @@ Default CSS pipeline:
 	formatted = collapseBlankLines(formatted, 2)
 
 	if noCSSPipeline {
-		if err := writeFileText(outPath, formatted); err != nil {
+		finalHTML := formatted
+		assetsWritten := 0
+		if !noExtractDataAssets {
+			var replaced int
+			finalHTML, assetsWritten, replaced, err = extractDataAssetsFromHTML(finalHTML, outPath)
+			if err != nil {
+				fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to extract data assets: %v\n", err)))
+				return 1
+			}
+			_ = replaced
+		}
+
+		if err := writeFileText(outPath, finalHTML); err != nil {
 			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
 			return 1
 		}
 		fmt.Printf("%s %s\n", wroteLabel(), outPath)
 		fmt.Printf("- input: %s\n", inputPath)
 		fmt.Printf("- indent: %d spaces\n", indentSpaces)
-		fmt.Printf("- chars: %d\n", len(formatted))
+		fmt.Printf("- chars: %d\n", len(finalHTML))
+		if assetsWritten > 0 {
+			fmt.Printf("- data assets written: %d\n", assetsWritten)
+		}
 		return 0
 	}
 
 	cssFiles := make([]string, 0)
 	varsFiles := make([]string, 0)
+	finalHTML := ""
+	assetsWritten := 0
 
 	styleChunks := extractStyleContentsFormattedHTML(formatted)
 	if len(styleChunks) > 0 {
@@ -144,18 +164,11 @@ Default CSS pipeline:
 		htmlNoStyles := removeStyleBlocksFormattedHTML(formatted)
 		htmlLinked := insertStylesheetLinkIndented(htmlNoStyles, href, indentUnit)
 		htmlLinked = collapseBlankLines(htmlLinked, 2)
-
-		if err := writeFileText(outPath, htmlLinked); err != nil {
-			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outPath, err)))
-			return 1
-		}
+		finalHTML = htmlLinked
 
 		cssFiles = append(cssFiles, cssOut)
 	} else {
-		if err := writeFileText(outPath, formatted); err != nil {
-			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outPath, err)))
-			return 1
-		}
+		finalHTML = formatted
 
 		for _, href := range iterLinkedStylesheetHrefs(formatted) {
 			h := strings.TrimSpace(href)
@@ -225,6 +238,21 @@ Default CSS pipeline:
 		}
 	}
 
+	if !noExtractDataAssets {
+		var replaced int
+		finalHTML, assetsWritten, replaced, err = extractDataAssetsFromHTML(finalHTML, outPath)
+		if err != nil {
+			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to extract data assets: %v\n", err)))
+			return 1
+		}
+		_ = replaced
+	}
+
+	if err := writeFileText(outPath, finalHTML); err != nil {
+		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outPath, err)))
+		return 1
+	}
+
 	fmt.Printf("%s %s\n", wroteLabel(), outPath)
 	fmt.Printf("- input: %s\n", inputPath)
 	fmt.Printf("- indent: %d spaces\n", indentSpaces)
@@ -233,6 +261,9 @@ Default CSS pipeline:
 	}
 	if len(varsFiles) > 0 {
 		fmt.Printf("- vars files written: %d\n", len(varsFiles))
+	}
+	if assetsWritten > 0 {
+		fmt.Printf("- data assets written: %d\n", assetsWritten)
 	}
 	return 0
 }

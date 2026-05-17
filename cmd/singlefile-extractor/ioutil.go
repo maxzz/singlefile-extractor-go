@@ -16,3 +16,10 @@ func writeFileText(path string, content string) error {
 	}
 	return os.WriteFile(path, []byte(content), 0o644)
 }
+
+func writeFileBytes(path string, content []byte) error {
+	if err := ensureParentDir(path); err != nil {
+		return err
+	}
+	return os.WriteFile(path, content, 0o644)
+}

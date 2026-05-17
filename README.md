@@ -105,6 +105,12 @@ By default it also runs a **CSS pipeline**:
 - runs `extract-data-urls` on that CSS so `url(data:...)` values are moved into a vars file and referenced via `var(--...)`
 - beautifies the rewritten CSS for readability
 
+It also (by default) extracts embedded **data:** images:
+- `<link href="data:image/...">` → writes an image file next to the output HTML and rewrites `href` to point at that file
+- `<img src="data:image/...">` → same behavior for `src`
+
+Disable with `--no-extract-data-assets`.
+
 ### How to run (Windows / PowerShell)
 If `--output` is omitted, it writes `<input_stem>_formatted<ext>` next to the input file.
 
