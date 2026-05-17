@@ -33,25 +33,6 @@ It also (by default) extracts embedded **data:** images:
 
 Disable with `--no-extract-data-assets`.
 
-### How to run (Windows / PowerShell)
-If `--output` is omitted, it writes `<input_stem>_formatted<ext>` next to the input file.
-
-```powershell
-go run ./cmd/singlefile-extractor format-html --input "tests\esignature-form.html"
-```
-
-Tip: if you omit the command, it defaults to `format-html` when `--input`/`-i` is provided:
-
-```powershell
-go run ./cmd/singlefile-extractor --input "tests\esignature-form.html"
-```
-
-Example with explicit output + indent:
-
-```powershell
-go run ./cmd/singlefile-extractor format-html --input "tests\esignature-form.html" --output "tests-local\out_formatted.html" --indent 2
-```
-
 ### Options
 - **`-i, --input <path>`**: Path to the HTML file to format. (required)
 - **`-o, --output <path>`**: Where to write the formatted HTML (default: next to `--input` with suffix `_formatted`).
@@ -67,15 +48,23 @@ go run ./cmd/singlefile-extractor format-html --input "tests\esignature-form.htm
 - **`--data-urls-import-href <href>`**: Override the `href` used in the inserted `@import` (default: relative path to vars file).
 - **`-h, --help`**: Show help.
 
-Full CLI help:
-
-```powershell
-npm run beautify:html:help
-```
 
 ### Notes / limitations
 - This formatter is **not a lossless HTML parser**; it may normalize whitespace in text nodes.
 - It’s intended for making “tag soup” HTML easier to read, not for producing strictly-valid HTML.
+- If `--output` is omitted, it writes `<input_stem>_formatted<ext>` next to the input file.
+
+### How to run (Windows / PowerShell)
+
+```powershell
+go run ./cmd/singlefile-extractor format-html --input "tests\esignature-form.html"
+
+# Tip: if you omit the command, it defaults to `format-html` when `--input`/`-i` is provided:
+go run ./cmd/singlefile-extractor --input "tests\esignature-form.html"
+
+# Example with explicit output + indent:
+go run ./cmd/singlefile-extractor format-html --input "tests\esignature-form.html" --output "tests-local\out_formatted.html" --indent 2
+```
 
 <h2 id="moveout-css">Command <code>moveout-css</code></h2>
 
@@ -83,20 +72,7 @@ npm run beautify:html:help
 
 Moves all inline `<style>...</style>` blocks from an HTML file into a separate `.css` file, removes the `<style>` blocks from the HTML, and inserts a `<link rel="stylesheet" href="...">` back into the HTML `<head>`.
 
-### How to run (Windows / PowerShell)
 If `--output` is omitted, it writes next to the input file with suffix `.external-css` (same extension), and writes CSS to `<output>.css`.
-
-Safe (write to new files, to a different folder):
-
-```powershell
-go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests-local\esignature-form.external-css.html" --css-output "tests-local\esignature-form.external-css.css"
-```
-
-In-place (overwrite `--input`):
-
-```powershell
-go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests\esignature-form.html" --css-output "tests\esignature-form.css"
-```
 
 ### Options
 - **`-i, --input <path>`**: Path to the HTML file to process. (required)
@@ -105,10 +81,14 @@ go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.htm
 - **`--href <href>`**: Optional `href` to use in the inserted `<link rel=stylesheet>` tag (default: relative path to `--css-output`).
 - **`-h, --help`**: Show help.
 
-Full CLI help:
+### How to run (Windows / PowerShell)
 
 ```powershell
-npm run moveout-css:help
+# Safe (write to new files, to a different folder):
+go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests-local\esignature-form.external-css.html" --css-output "tests-local\esignature-form.external-css.css"
+
+# In-place (overwrite `--input`):
+go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests\esignature-form.html" --css-output "tests\esignature-form.css"
 ```
 
 <h2 id="format-css">Command <code>format-css</code></h2>
@@ -122,19 +102,6 @@ By default it also runs **Data URL extraction** (same logic as `extract-data-url
 - moves them into a separate `:root { --... }` vars file
 - rewrites the formatted CSS to reference them via `var(--...)` and adds an `@import` for the vars file
 
-### How to run (Windows / PowerShell)
-If `--output` is omitted, it writes `<input_stem>_formatted<ext>` next to the input file.
-
-```powershell
-go run ./cmd/singlefile-extractor format-css --input "tests-local\esig.smoke.css"
-```
-
-Example with explicit output + indent:
-
-```powershell
-go run ./cmd/singlefile-extractor format-css --input "tests-local\esig.smoke.css" --output "tests-local\esig.smoke_formatted.css" --indent 2
-```
-
 ### Options
 - **`-i, --input <path>`**: Path to the CSS file to format. (required)
 - **`-o, --output <path>`**: Where to write the formatted CSS (default: next to `--input` with suffix `_formatted`).
@@ -147,14 +114,18 @@ go run ./cmd/singlefile-extractor format-css --input "tests-local\esig.smoke.css
 - **`--data-urls-import-href <href>`**: Override the href used in the inserted `@import` (default: relative path to vars file).
 - **`-h, --help`**: Show help.
 
-Full CLI help:
-
-```powershell
-npm run beautify:css:help
-```
-
 ### Notes / limitations
 - This formatter is **not a full CSS parser**; it may normalize whitespace and is intended for readability.
+- If `--output` is omitted, it writes `<input_stem>_formatted<ext>` next to the input file.
+
+### How to run (Windows / PowerShell)
+
+```powershell
+go run ./cmd/singlefile-extractor format-css --input "tests-local\esig.smoke.css"
+
+# Example with explicit output + indent:
+go run ./cmd/singlefile-extractor format-css --input "tests-local\esig.smoke.css" --output "tests-local\esig.smoke_formatted.css" --indent 2
+```
 
 <h2 id="extract-data-urls">Command <code>extract-data-urls</code></h2>
 
@@ -164,21 +135,7 @@ Scans a CSS file for `url(data:...)` usages, **moves those data URLs into a sepa
 
 It can also move existing `:root` custom properties (like `--sf-img-*`) into the vars file when their `data:` URL exceeds a configurable length threshold.
 
-### How to run (Windows / PowerShell)
-If `--output` is omitted, it writes next to the input file with suffix `_dataurls_extracted` (same extension), and writes `<output_stem>_vars<ext>` next to it.
-
-```powershell
-go run ./cmd/singlefile-extractor extract-data-urls --input "tests-local\esig.smoke_formatted.css" --output "tests-local\esig.smoke_no-dataurls.css" --vars-output "tests-local\esig.smoke_dataurls-vars.css"
-```
-
 By default, it also inserts an `@import` at the top of the rewritten CSS so the vars file is loaded automatically.
-
-You can also run via npm:
-
-```powershell
-npm run extract:data-urls -- --input "in.css"
-npm run extract:data-urls:help
-```
 
 ### Options
 - **`-i, --input <path>`**: Path to the CSS file to process. (required)
@@ -192,6 +149,17 @@ npm run extract:data-urls:help
 
 ### Notes / limitations
 - Best-effort parsing (like the other formatters). Works well for typical “minified + embedded assets” CSS, but it’s not a full CSS AST parser.
+- If `--output` is omitted, it writes next to the input file with suffix `_dataurls_extracted` (same extension), and writes `<output_stem>_vars<ext>` next to it.
+
+### How to run (Windows / PowerShell)
+
+```powershell
+go run ./cmd/singlefile-extractor extract-data-urls --input "tests-local\esig.smoke_formatted.css" --output "tests-local\esig.smoke_no-dataurls.css" --vars-output "tests-local\esig.smoke_dataurls-vars.css"
+
+# You can also run via npm:
+npm run extract:data-urls -- --input "in.css"
+npm run extract:data-urls:help
+```
 
 <h2 id="extract">Command <code>extract</code></h2>
 
@@ -209,20 +177,6 @@ Specifically it:
   - the full `<form ...>...</form>` for the requested id
 - Writes a new HTML file containing only those pieces.
 
-### How to run (Windows / PowerShell)
-From this repo folder:
-
-```powershell
-go run ./cmd/singlefile-extractor extract --input "Some SingleFile.html"
-```
-
-You can also run via npm:
-
-```powershell
-npm run extract -- --input "Some SingleFile.html"
-npm run extract:help
-```
-
 ### Options
 - **`-i, --input <path>`**: Path to the SingleFile-saved HTML file. (required)
 - **`-o, --output <path>`**: Where to write the extracted standalone HTML (default: next to `--input` with suffix `_extracted` and the same extension).
@@ -231,26 +185,34 @@ npm run extract:help
 - **`--max-depth <n>`**: Max depth to recurse through nested `iframe[srcdoc]` (default: `10`).
 - **`-h, --help`**: Show help.
 
+### Notes / limitations
+- It does **not** guarantee the extracted form is fully functional (some pages rely on external scripts/services).
+- It does **not** download external resources; it only keeps what is already embedded in the SingleFile HTML.
+
+### How to run (Windows / PowerShell)
+
+```powershell
+# From this repo folder:
+go run ./cmd/singlefile-extractor extract --input "Some SingleFile.html"
+
+# You can also run via npm:
+npm run extract -- --input "Some SingleFile.html"
+npm run extract:help
+```
+
 ### Examples
 
 ```powershell
 go run ./cmd/singlefile-extractor extract --input "Another SingleFile Page.html" --output "out.html"
 go run ./cmd/singlefile-extractor extract --input "Some Page.html" --output "some-form.html" --form-id "myFormId"
 go run ./cmd/singlefile-extractor extract --input "Some Page.html" --output "out.html" --form-id "aspnetForm" --contains "ESigCaptureVP.aspx"
-```
 
-Batch example (run on all `.html` files in a folder):
-
-```powershell
+# Batch example (run on all `.html` files in a folder):
 Get-ChildItem -Filter *.html | ForEach-Object {
   $out = Join-Path $_.DirectoryName ($_.BaseName + "-extracted.html")
   go run ./cmd/singlefile-extractor extract --input $_.FullName --output $out --form-id "aspnetForm"
 }
 ```
-
-### Notes / limitations
-- It does **not** guarantee the extracted form is fully functional (some pages rely on external scripts/services).
-- It does **not** download external resources; it only keeps what is already embedded in the SingleFile HTML.
 
 <h2 id="install-clean-machine">Install (clean machine)</h2>
 
@@ -271,32 +233,28 @@ Get-ChildItem -Filter *.html | ForEach-Object {
 - **Linux**: install Node.js via your distro package manager, or from [nodejs.org](https://nodejs.org)
 
 ### Get the code
-Clone your repo (or download a zip), then `cd` into it:
-
 ```powershell
+# Clone your repo (or download a zip), then `cd` into it:
 git clone <YOUR_REPO_URL>
 cd singlefile-extractor-go
 ```
 
 ### Build a binary
-Build into `dist/`:
 
 ```powershell
+# Build into `dist/`:
 npm run build
 # Windows users who prefer an .exe extension:
 npm run build:win
-```
 
-Or build directly with Go:
 
-```powershell
+# Or build directly with Go:
 go build -trimpath -o dist/singlefile-extractor ./cmd/singlefile-extractor
 ```
 
 ### Run
-Without building (compiles + runs each time):
-
 ```powershell
+# Without building (compiles + runs each time):
 go run ./cmd/singlefile-extractor --help
 ```
 
@@ -320,4 +278,3 @@ singlefile-extractor --help
 ```
 
 On Windows you may need to add `%USERPROFILE%\go\bin` to your `PATH`.
-
