@@ -5,97 +5,17 @@ Small Go CLI utilities for extracting and post-processing content from **SingleF
 This project is a Go port of the original Python scripts. The primary entrypoint is a single CLI binary with subcommands.
 
 ## Table of contents
-- [`Install (clean machine)`](#install-clean-machine)
-- [`extract`](#extract)
-- [`moveout-css`](#moveout-css)
+---
 - [`format-html`](#format-html)
+- [`moveout-css`](#moveout-css)
 - [`format-css`](#format-css)
 - [`extract-data-urls`](#extract-data-urls)
-
-## `extract`
-
-### What it does
-Extracts one `<form>` element (by id) from a **SingleFile-saved HTML** and writes it into a **standalone HTML file** that preserves the form’s **visual styling**.
-
-Specifically it:
-- Walks through nested `iframe[srcdoc]` documents (SingleFile embeds pages this way).
-- Finds candidate embedded documents that contain `<form id="...">`.
-- Extracts from the chosen document:
-  - the opening `<body ...>` tag (to keep theme/body classes)
-  - all inline `<style>...</style>` blocks
-  - any `<link rel="stylesheet" ...>` tags
-  - the full `<form ...>...</form>` for the requested id
-- Writes a new HTML file containing only those pieces.
-
-### How to run (Windows / PowerShell)
-From this repo folder:
-
-```powershell
-go run ./cmd/singlefile-extractor extract --input "Some SingleFile.html"
-```
-
-You can also run via npm:
-
-```powershell
-npm run extract -- --input "Some SingleFile.html"
-npm run extract:help
-```
-
-### Options
-- `-i, --input`: Path to the SingleFile-saved HTML file. (required)
-- `-o, --output`: Where to write the extracted standalone HTML (default: next to `--input` with suffix `_extracted` and the same extension).
-- `--form-id`: The id of the `<form>` element to extract (default: `aspnetForm`).
-- `--contains`: Optional substring filter to disambiguate when multiple matches exist (example: `ESigCaptureVP.aspx`).
-- `--max-depth`: Max depth to recurse through nested `iframe[srcdoc]` (default: `10`).
-
-### Examples
-
-```powershell
-go run ./cmd/singlefile-extractor extract --input "Another SingleFile Page.html" --output "out.html"
-go run ./cmd/singlefile-extractor extract --input "Some Page.html" --output "some-form.html" --form-id "myFormId"
-go run ./cmd/singlefile-extractor extract --input "Some Page.html" --output "out.html" --form-id "aspnetForm" --contains "ESigCaptureVP.aspx"
-```
-
-Batch example (run on all `.html` files in a folder):
-
-```powershell
-Get-ChildItem -Filter *.html | ForEach-Object {
-  $out = Join-Path $_.DirectoryName ($_.BaseName + "-extracted.html")
-  go run ./cmd/singlefile-extractor extract --input $_.FullName --output $out --form-id "aspnetForm"
-}
-```
-
-### Notes / limitations
-- It does **not** guarantee the extracted form is fully functional (some pages rely on external scripts/services).
-- It does **not** download external resources; it only keeps what is already embedded in the SingleFile HTML.
-
-## `moveout-css`
-
-### What it does
-Moves all inline `<style>...</style>` blocks from an HTML file into a separate `.css` file, removes the `<style>` blocks from the HTML, and inserts a `<link rel="stylesheet" href="...">` back into the HTML `<head>`.
-
-### How to run (Windows / PowerShell)
-If `--output` is omitted, it writes next to the input file with suffix `.external-css` (same extension), and writes CSS to `<output>.css`.
-
-Safe (write to new files, to a different folder):
-
-```powershell
-go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests-local\esignature-form.external-css.html" --css-output "tests-local\esignature-form.external-css.css"
-```
-
-In-place (overwrite `--input`):
-
-```powershell
-go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests\esignature-form.html" --css-output "tests\esignature-form.css"
-```
-
-Full CLI help:
-
-```powershell
-npm run moveout-css:help
-```
+- [`extract`](#extract)
+- [`Install (clean machine)`](#install-clean-machine)
 
 ## `format-html`
+
+---
 
 ### What it does
 Best-effort HTML formatter (pretty-printer). It tokenizes the HTML and writes it back with newlines + indentation.
@@ -130,6 +50,21 @@ Example with explicit output + indent:
 go run ./cmd/singlefile-extractor format-html --input "tests\esignature-form.html" --output "tests-local\out_formatted.html" --indent 2
 ```
 
+### Options
+- **`-i, --input <path>`**: Path to the HTML file to format. (required)
+- **`-o, --output <path>`**: Where to write the formatted HTML (default: next to `--input` with suffix `_formatted`).
+- **`--indent <n>`**: Spaces per indent level (default: `2`).
+- **`--no-css-pipeline`**: Disable the default CSS pipeline (format HTML only).
+- **`--no-extract-data-assets`**: Do not extract `data:image/...` from `<link href>` / `<img src>` into `assets/` next to the output HTML.
+- **`--css-output <path>`**: Where to write extracted CSS when `<style>` blocks exist (default: `<output_stem>.css`).
+- **`--css-href <href>`**: Override the `href` used in the inserted `<link rel=stylesheet>` tag (default: relative path to `--css-output`).
+- **`--data-urls-vars-output <path>`**: Where to write extracted data-url custom properties (default: `<css_stem>_dataurls-vars.css`).
+- **`--data-urls-min-var-url-length <n>`**: Only move existing `:root` custom properties into the vars file when the `data:` URL length is >= this value (default: `500`).
+- **`--data-urls-var-prefix <prefix>`**: Prefix used for generated custom properties (default: `data-url`).
+- **`--data-urls-no-import`**: Do not insert an `@import` for the vars file into the rewritten CSS.
+- **`--data-urls-import-href <href>`**: Override the `href` used in the inserted `@import` (default: relative path to vars file).
+- **`-h, --help`**: Show help.
+
 Full CLI help:
 
 ```powershell
@@ -140,7 +75,44 @@ npm run beautify:html:help
 - This formatter is **not a lossless HTML parser**; it may normalize whitespace in text nodes.
 - It’s intended for making “tag soup” HTML easier to read, not for producing strictly-valid HTML.
 
+## `moveout-css`
+
+---
+
+### What it does
+Moves all inline `<style>...</style>` blocks from an HTML file into a separate `.css` file, removes the `<style>` blocks from the HTML, and inserts a `<link rel="stylesheet" href="...">` back into the HTML `<head>`.
+
+### How to run (Windows / PowerShell)
+If `--output` is omitted, it writes next to the input file with suffix `.external-css` (same extension), and writes CSS to `<output>.css`.
+
+Safe (write to new files, to a different folder):
+
+```powershell
+go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests-local\esignature-form.external-css.html" --css-output "tests-local\esignature-form.external-css.css"
+```
+
+In-place (overwrite `--input`):
+
+```powershell
+go run ./cmd/singlefile-extractor moveout-css --input "tests\esignature-form.html" --output "tests\esignature-form.html" --css-output "tests\esignature-form.css"
+```
+
+### Options
+- **`-i, --input <path>`**: Path to the HTML file to process. (required)
+- **`-o, --output <path>`**: Where to write the updated HTML (default: next to `--input` with suffix `.external-css`).
+- **`--css-output <path>`**: Where to write extracted CSS (default: `<output>.css`).
+- **`--href <href>`**: Optional `href` to use in the inserted `<link rel=stylesheet>` tag (default: relative path to `--css-output`).
+- **`-h, --help`**: Show help.
+
+Full CLI help:
+
+```powershell
+npm run moveout-css:help
+```
+
 ## `format-css`
+
+---
 
 ### What it does
 Best-effort CSS formatter (pretty-printer). It inserts newlines + indentation around `{`, `}`, and declaration `;` while respecting strings/comments and avoiding breaking tokens inside parentheses (like `url(...)`).
@@ -163,6 +135,18 @@ Example with explicit output + indent:
 go run ./cmd/singlefile-extractor format-css --input "tests-local\esig.smoke.css" --output "tests-local\esig.smoke_formatted.css" --indent 2
 ```
 
+### Options
+- **`-i, --input <path>`**: Path to the CSS file to format. (required)
+- **`-o, --output <path>`**: Where to write the formatted CSS (default: next to `--input` with suffix `_formatted`).
+- **`--indent <n>`**: Spaces per indent level (default: `2`).
+- **`--no-extract-data-urls`**: Disable automatic extraction of `url(data:...)` into a separate vars file.
+- **`--data-urls-vars-output <path>`**: Where to write extracted data-url custom properties (default: `<output_stem>_dataurls-vars.css`).
+- **`--data-urls-min-var-url-length <n>`**: Only move existing `:root` custom properties into vars file when the `data:` URL length is >= this value (default: `500`).
+- **`--data-urls-var-prefix <prefix>`**: Prefix used for generated custom properties (default: `data-url`).
+- **`--data-urls-no-import`**: Do not insert an `@import` for the vars file into the rewritten CSS.
+- **`--data-urls-import-href <href>`**: Override the href used in the inserted `@import` (default: relative path to vars file).
+- **`-h, --help`**: Show help.
+
 Full CLI help:
 
 ```powershell
@@ -173,6 +157,8 @@ npm run beautify:css:help
 - This formatter is **not a full CSS parser**; it may normalize whitespace and is intended for readability.
 
 ## `extract-data-urls`
+
+---
 
 ### What it does
 Scans a CSS file for `url(data:...)` usages, **moves those data URLs into a separate CSS file as custom properties**, and rewrites the main CSS to reference them via `var(--...)`.
@@ -195,10 +181,82 @@ npm run extract:data-urls -- --input "in.css"
 npm run extract:data-urls:help
 ```
 
+### Options
+- **`-i, --input <path>`**: Path to the CSS file to process. (required)
+- **`-o, --output <path>`**: Where to write the rewritten CSS (default: next to `--input` with suffix `_dataurls_extracted`).
+- **`--vars-output <path>`**: Where to write extracted CSS custom properties (default: next to `--output` with suffix `_vars`).
+- **`--min-var-url-length <n>`**: Only move existing `:root` custom properties into vars file if their `data:` URL length is >= this value (default: `500`).
+- **`--var-prefix <prefix>`**: Prefix used for generated custom properties (default: `data-url`).
+- **`--no-import`**: Do not insert an `@import` for the vars file into the rewritten CSS.
+- **`--import-href <href>`**: Override the href used in the inserted `@import` (default: relative path to `--vars-output`).
+- **`-h, --help`**: Show help.
+
 ### Notes / limitations
 - Best-effort parsing (like the other formatters). Works well for typical “minified + embedded assets” CSS, but it’s not a full CSS AST parser.
 
+## `extract`
+
+---
+
+### What it does
+Extracts one `<form>` element (by id) from a **SingleFile-saved HTML** and writes it into a **standalone HTML file** that preserves the form’s **visual styling**.
+
+Specifically it:
+- Walks through nested `iframe[srcdoc]` documents (SingleFile embeds pages this way).
+- Finds candidate embedded documents that contain `<form id="...">`.
+- Extracts from the chosen document:
+  - the opening `<body ...>` tag (to keep theme/body classes)
+  - all inline `<style>...</style>` blocks
+  - any `<link rel="stylesheet" ...>` tags
+  - the full `<form ...>...</form>` for the requested id
+- Writes a new HTML file containing only those pieces.
+
+### How to run (Windows / PowerShell)
+From this repo folder:
+
+```powershell
+go run ./cmd/singlefile-extractor extract --input "Some SingleFile.html"
+```
+
+You can also run via npm:
+
+```powershell
+npm run extract -- --input "Some SingleFile.html"
+npm run extract:help
+```
+
+### Options
+- **`-i, --input <path>`**: Path to the SingleFile-saved HTML file. (required)
+- **`-o, --output <path>`**: Where to write the extracted standalone HTML (default: next to `--input` with suffix `_extracted` and the same extension).
+- **`--form-id <id>`**: The id of the `<form>` element to extract (default: `aspnetForm`).
+- **`--contains <substring>`**: Optional substring filter to disambiguate when multiple matches exist (example: `ESigCaptureVP.aspx`).
+- **`--max-depth <n>`**: Max depth to recurse through nested `iframe[srcdoc]` (default: `10`).
+- **`-h, --help`**: Show help.
+
+### Examples
+
+```powershell
+go run ./cmd/singlefile-extractor extract --input "Another SingleFile Page.html" --output "out.html"
+go run ./cmd/singlefile-extractor extract --input "Some Page.html" --output "some-form.html" --form-id "myFormId"
+go run ./cmd/singlefile-extractor extract --input "Some Page.html" --output "out.html" --form-id "aspnetForm" --contains "ESigCaptureVP.aspx"
+```
+
+Batch example (run on all `.html` files in a folder):
+
+```powershell
+Get-ChildItem -Filter *.html | ForEach-Object {
+  $out = Join-Path $_.DirectoryName ($_.BaseName + "-extracted.html")
+  go run ./cmd/singlefile-extractor extract --input $_.FullName --output $out --form-id "aspnetForm"
+}
+```
+
+### Notes / limitations
+- It does **not** guarantee the extracted form is fully functional (some pages rely on external scripts/services).
+- It does **not** download external resources; it only keeps what is already embedded in the SingleFile HTML.
+
 ## Install (clean machine)
+
+---
 
 ### Prerequisites
 - **Go 1.22+** (required)
