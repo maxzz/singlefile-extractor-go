@@ -6,18 +6,18 @@ This project is a Go port of the original Python scripts. The primary entrypoint
 
 ## Table of contents
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
 
-- [`format-html`](#format-html)
-- [`moveout-css`](#moveout-css)
-- [`format-css`](#format-css)
-- [`extract-data-urls`](#extract-data-urls)
-- [`extract`](#extract)
+- [`Command format-html`](#format-html)
+- [`Command moveout-css`](#moveout-css)
+- [`Command format-css`](#format-css)
+- [`Command extract-data-urls`](#extract-data-urls)
+- [`Command extract`](#extract)
 - [`Install (clean machine)`](#install-clean-machine)
 
-## `format-html`
+<h2 id="format-html">Command <code>format-html</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
 
 ### What it does
 Best-effort HTML formatter (pretty-printer). It tokenizes the HTML and writes it back with newlines + indentation.
@@ -77,9 +77,9 @@ npm run beautify:html:help
 - This formatter is **not a lossless HTML parser**; it may normalize whitespace in text nodes.
 - It’s intended for making “tag soup” HTML easier to read, not for producing strictly-valid HTML.
 
-## `moveout-css`
+<h2 id="moveout-css">Command <code>moveout-css</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
 
 ### What it does
 Moves all inline `<style>...</style>` blocks from an HTML file into a separate `.css` file, removes the `<style>` blocks from the HTML, and inserts a `<link rel="stylesheet" href="...">` back into the HTML `<head>`.
@@ -112,9 +112,9 @@ Full CLI help:
 npm run moveout-css:help
 ```
 
-## `format-css`
+<h2 id="format-css">Command <code>format-css</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
 
 ### What it does
 Best-effort CSS formatter (pretty-printer). It inserts newlines + indentation around `{`, `}`, and declaration `;` while respecting strings/comments and avoiding breaking tokens inside parentheses (like `url(...)`).
@@ -158,9 +158,9 @@ npm run beautify:css:help
 ### Notes / limitations
 - This formatter is **not a full CSS parser**; it may normalize whitespace and is intended for readability.
 
-## `extract-data-urls`
+<h2 id="extract-data-urls">Command <code>extract-data-urls</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
 
 ### What it does
 Scans a CSS file for `url(data:...)` usages, **moves those data URLs into a separate CSS file as custom properties**, and rewrites the main CSS to reference them via `var(--...)`.
@@ -196,9 +196,9 @@ npm run extract:data-urls:help
 ### Notes / limitations
 - Best-effort parsing (like the other formatters). Works well for typical “minified + embedded assets” CSS, but it’s not a full CSS AST parser.
 
-## `extract`
+<h2 id="extract">Command <code>extract</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
 
 ### What it does
 Extracts one `<form>` element (by id) from a **SingleFile-saved HTML** and writes it into a **standalone HTML file** that preserves the form’s **visual styling**.
@@ -256,9 +256,9 @@ Get-ChildItem -Filter *.html | ForEach-Object {
 - It does **not** guarantee the extracted form is fully functional (some pages rely on external scripts/services).
 - It does **not** download external resources; it only keeps what is already embedded in the SingleFile HTML.
 
-## Install (clean machine)
+<h2 id="install-clean-machine">Install (clean machine)</h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
 
 ### Prerequisites
 - **Go 1.22+** (required)
