@@ -6,20 +6,20 @@ This project is a Go port of the original Python scripts. The primary entrypoint
 
 ## Table of contents
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
+<!-- <hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" /> -->
 
-- [`Command format-html`](#format-html)
-- [`Command moveout-css`](#moveout-css)
-- [`Command format-css`](#format-css)
-- [`Command extract-data-urls`](#extract-data-urls)
-- [`Command extract`](#extract)
+- Command [`format-html`](#format-html)
+- Command [`moveout-css`](#moveout-css)
+- Command [`format-css`](#format-css)
+- Command [`extract-data-urls`](#extract-data-urls)
+- Command [`extract`](#extract)
 - [`Install (clean machine)`](#install-clean-machine)
+
 
 <h2 id="format-html">Command <code>format-html</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
+<!-- <hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" /> -->
 
-### What it does
 Best-effort HTML formatter (pretty-printer). It tokenizes the HTML and writes it back with newlines + indentation.
 
 By default it also runs a **CSS pipeline**:
@@ -79,9 +79,8 @@ npm run beautify:html:help
 
 <h2 id="moveout-css">Command <code>moveout-css</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
+<!-- <hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" /> -->
 
-### What it does
 Moves all inline `<style>...</style>` blocks from an HTML file into a separate `.css` file, removes the `<style>` blocks from the HTML, and inserts a `<link rel="stylesheet" href="...">` back into the HTML `<head>`.
 
 ### How to run (Windows / PowerShell)
@@ -114,9 +113,8 @@ npm run moveout-css:help
 
 <h2 id="format-css">Command <code>format-css</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
+<!-- <hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" /> -->
 
-### What it does
 Best-effort CSS formatter (pretty-printer). It inserts newlines + indentation around `{`, `}`, and declaration `;` while respecting strings/comments and avoiding breaking tokens inside parentheses (like `url(...)`).
 
 By default it also runs **Data URL extraction** (same logic as `extract-data-urls`):
@@ -160,9 +158,8 @@ npm run beautify:css:help
 
 <h2 id="extract-data-urls">Command <code>extract-data-urls</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
+<!-- <hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" /> -->
 
-### What it does
 Scans a CSS file for `url(data:...)` usages, **moves those data URLs into a separate CSS file as custom properties**, and rewrites the main CSS to reference them via `var(--...)`.
 
 It can also move existing `:root` custom properties (like `--sf-img-*`) into the vars file when their `data:` URL exceeds a configurable length threshold.
@@ -198,9 +195,8 @@ npm run extract:data-urls:help
 
 <h2 id="extract">Command <code>extract</code></h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
+<!-- <hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" /> -->
 
-### What it does
 Extracts one `<form>` element (by id) from a **SingleFile-saved HTML** and writes it into a **standalone HTML file** that preserves the form’s **visual styling**.
 
 Specifically it:
@@ -258,7 +254,7 @@ Get-ChildItem -Filter *.html | ForEach-Object {
 
 <h2 id="install-clean-machine">Install (clean machine)</h2>
 
-<hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" />
+<!-- <hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" /> -->
 
 ### Prerequisites
 - **Go 1.22+** (required)
