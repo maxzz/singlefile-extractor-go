@@ -18,6 +18,7 @@ type parsedDataURL struct {
 
 func extractDataAssetsFromHTML(htmlText string, outHTMLPath string) (newHTML string, filesWritten int, attrsReplaced int, err error) {
 	outDir := filepath.Dir(outHTMLPath)
+	assetsDir := filepath.Join(outDir, "assets")
 	toks := tokenizeHTML(htmlText)
 
 	// sha256(hex prefix) -> filename
@@ -80,7 +81,7 @@ func extractDataAssetsFromHTML(htmlText string, outHTMLPath string) (newHTML str
 		}
 
 		if !writtenNames[fileName] {
-			filePath := filepath.Join(outDir, fileName)
+			filePath := filepath.Join(assetsDir, fileName)
 			if !fileExists(filePath) {
 				if werr := writeFileBytes(filePath, parsed.Data); werr != nil {
 					return "", 0, 0, werr
@@ -90,7 +91,8 @@ func extractDataAssetsFromHTML(htmlText string, outHTMLPath string) (newHTML str
 			writtenNames[fileName] = true
 		}
 
-		updatedTag, ok := replaceTagAttrValue(tagText, attrName, fileName)
+		ref := filepath.ToSlash(filepath.Join("assets", fileName))
+		updatedTag, ok := replaceTagAttrValue(tagText, attrName, ref)
 		if ok {
 			attrsReplaced++
 			b.WriteString(updatedTag)

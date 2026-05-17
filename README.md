@@ -106,7 +106,7 @@ By default it also runs a **CSS pipeline**:
 - beautifies the rewritten CSS for readability
 
 It also (by default) extracts embedded **data:** images:
-- `<link href="data:image/...">` → writes an image file next to the output HTML and rewrites `href` to point at that file
+- `<link href="data:image/...">` → writes an image file to `assets/` next to the output HTML and rewrites `href` to `assets/<file>`
 - `<img src="data:image/...">` → same behavior for `src`
 
 Disable with `--no-extract-data-assets`.
