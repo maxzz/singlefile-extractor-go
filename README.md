@@ -5,7 +5,9 @@ Small Go CLI utilities for extracting and post-processing content from **SingleF
 This project is a Go port of the original Python scripts. The primary entrypoint is a single CLI binary with subcommands.
 
 ## Table of contents
----
+
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
+
 - [`format-html`](#format-html)
 - [`moveout-css`](#moveout-css)
 - [`format-css`](#format-css)
@@ -15,7 +17,7 @@ This project is a Go port of the original Python scripts. The primary entrypoint
 
 ## `format-html`
 
----
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
 
 ### What it does
 Best-effort HTML formatter (pretty-printer). It tokenizes the HTML and writes it back with newlines + indentation.
@@ -77,7 +79,7 @@ npm run beautify:html:help
 
 ## `moveout-css`
 
----
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
 
 ### What it does
 Moves all inline `<style>...</style>` blocks from an HTML file into a separate `.css` file, removes the `<style>` blocks from the HTML, and inserts a `<link rel="stylesheet" href="...">` back into the HTML `<head>`.
@@ -112,7 +114,7 @@ npm run moveout-css:help
 
 ## `format-css`
 
----
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
 
 ### What it does
 Best-effort CSS formatter (pretty-printer). It inserts newlines + indentation around `{`, `}`, and declaration `;` while respecting strings/comments and avoiding breaking tokens inside parentheses (like `url(...)`).
@@ -158,7 +160,7 @@ npm run beautify:css:help
 
 ## `extract-data-urls`
 
----
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
 
 ### What it does
 Scans a CSS file for `url(data:...)` usages, **moves those data URLs into a separate CSS file as custom properties**, and rewrites the main CSS to reference them via `var(--...)`.
@@ -196,7 +198,7 @@ npm run extract:data-urls:help
 
 ## `extract`
 
----
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
 
 ### What it does
 Extracts one `<form>` element (by id) from a **SingleFile-saved HTML** and writes it into a **standalone HTML file** that preserves the form’s **visual styling**.
@@ -256,7 +258,7 @@ Get-ChildItem -Filter *.html | ForEach-Object {
 
 ## Install (clean machine)
 
----
+<hr style="border:none;border-top:2px solid #1a1a1a;margin:1em 0 0.85em;" />
 
 ### Prerequisites
 - **Go 1.22+** (required)
