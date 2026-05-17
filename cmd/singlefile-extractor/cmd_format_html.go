@@ -36,7 +36,7 @@ func cmdFormatHTML(argv []string) int {
 				{Short: "o", Long: "output", Arg: "<path>", Desc: `Where to write the formatted HTML. (default: next to --input with suffix "_formatted")`},
 				{Long: "indent", Arg: "<n>", Desc: "Spaces per indent level. (default: 2)"},
 				{Long: "no-css-pipeline", Desc: "Disable the default CSS pipeline (format HTML only)."},
-				{Long: "no-extract-data-assets", Desc: `Disable extracting data: images from <link href> and <img src> into files under "assets/" next to the output HTML.`},
+				{Long: "no-extract-data-assets", Desc: `Disable extracting data: images/fonts from <link href> and <img src> into files under "assets/" next to the output HTML.`},
 				{Long: "css-output", Arg: "<path>", Desc: `Where to write extracted CSS when <style> blocks exist. (default: "<output_stem>.css")`},
 				{Long: "css-href", Arg: "<href>", Desc: "Override the href used in the inserted <link rel=stylesheet> tag. (default: relative path to --css-output)"},
 				{Long: "data-urls-vars-output", Arg: "<path>", Desc: `Where to write extracted data-url custom properties. (default: "<css_stem>_dataurls-vars.css")`},
@@ -62,7 +62,7 @@ Default CSS pipeline:
 	fs.StringVar(&outputPath, "o", "", `Where to write the formatted HTML (default: next to --input with suffix "_formatted").`)
 	fs.IntVar(&indentSpaces, "indent", 2, "Spaces per indent level (default: 2).")
 	fs.BoolVar(&noCSSPipeline, "no-css-pipeline", false, "Disable the default CSS pipeline (format HTML only).")
-	fs.BoolVar(&noExtractDataAssets, "no-extract-data-assets", false, `Disable extracting data: images from <link href> and <img src> into files under "assets/" next to the output HTML.`)
+	fs.BoolVar(&noExtractDataAssets, "no-extract-data-assets", false, `Disable extracting data: images/fonts from <link href> and <img src> into files under "assets/" next to the output HTML.`)
 	fs.StringVar(&cssOutputPath, "css-output", "", `Where to write extracted CSS when <style> blocks exist (default: "<output_stem>.css").`)
 	fs.StringVar(&cssHref, "css-href", "", "Override the href used in the inserted <link rel=stylesheet> tag (default: relative path to --css-output).")
 	fs.StringVar(&dataURLsVarsOutput, "data-urls-vars-output", "", `Where to write extracted data-url custom properties (default: "<css_stem>_dataurls-vars.css").`)

@@ -27,8 +27,9 @@ By default it also runs a **CSS pipeline**:
 - runs `extract-data-urls` on that CSS so `url(data:...)` values are moved into a vars file and referenced via `var(--...)`
 - beautifies the rewritten CSS for readability
 
-It also (by default) extracts embedded **data:** images:
+It also (by default) extracts embedded **data:** assets (images + fonts):
 - `<link href="data:image/...">` → writes an image file to `assets/` next to the output HTML and rewrites `href` to `assets/<file>`
+- `<link href="data:font/...">` → writes a font file to `assets/` next to the output HTML and rewrites `href` to `assets/<file>`
 - `<img src="data:image/...">` → same behavior for `src`
 
 Disable with `--no-extract-data-assets`.
@@ -41,7 +42,7 @@ Disable with `--no-extract-data-assets`.
 | `-o`, `--output <path>` | Where to write the formatted HTML (default: next to `--input` with suffix `_formatted`). |
 | `--indent <n>` | Spaces per indent level (default: `2`). |
 | `--no-css-pipeline` | Disable the default CSS pipeline (format HTML only). |
-| `--no-extract-data-assets` | Do not extract `data:image/...` from `<link href>` / `<img src>` into `assets/` next to the output HTML. |
+| `--no-extract-data-assets` | Do not extract `data:image/...` / `data:font/...` from `<link href>` / `<img src>` into `assets/` next to the output HTML. |
 | `--css-output <path>` | Where to write extracted CSS when `<style>` blocks exist (default: `<output_stem>.css`). |
 | `--css-href <href>` | Override the `href` used in the inserted `<link rel=stylesheet>` tag (default: relative path to `--css-output`). |
 | `--data-urls-vars-output <path>` | Where to write extracted data-url custom properties (default: `<css_stem>_dataurls-vars.css`). |
@@ -107,6 +108,7 @@ By default it also runs **Data URL extraction** (same logic as `extract-data-url
 - finds `url(data:...)` values
 - moves them into a separate `:root { --... }` vars file
 - rewrites the formatted CSS to reference them via `var(--...)` and adds an `@import` for the vars file
+- for `data:image/...` and `data:font/...`, writes real files into `assets/` next to the CSS and rewrites the vars file to use `url("assets/...")`
 
 ### Options
 
@@ -143,6 +145,8 @@ go run ./cmd/singlefile-extractor format-css --input "tests-local\esig.smoke.css
 Scans a CSS file for `url(data:...)` usages, **moves those data URLs into a separate CSS file as custom properties**, and rewrites the main CSS to reference them via `var(--...)`.
 
 It can also move existing `:root` custom properties (like `--sf-img-*`) into the vars file when their `data:` URL exceeds a configurable length threshold.
+
+For `data:image/...` and `data:font/...` URLs it also writes real files into `assets/` (next to the vars file) and rewrites the vars to use `url("assets/...")`.
 
 By default, it also inserts an `@import` at the top of the rewritten CSS so the vars file is loaded automatically.
 

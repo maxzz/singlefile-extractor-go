@@ -34,7 +34,7 @@ func cmdExtractDataURLs(argv []string) int {
 	fs.SetOutput(os.Stdout)
 	fs.Usage = func() {
 		printUsage(fs.Output(), usageSpec{
-			Summary:   "Extract url(data:...) occurrences into an external CSS variables file and rewrite the main CSS to reference them.",
+			Summary:   `Extract url(data:...) into a vars CSS file, rewrite CSS to reference var(--...), and extract image/font data URLs into "assets/".`,
 			UsageLine: "singlefile-extractor extract-data-urls --input <path> [options]",
 			Options: []optionHelp{
 				{Short: "i", Long: "input", Arg: "<path>", Desc: "Path to the CSS file to process. (required)"},
@@ -140,5 +140,8 @@ func runExtractDataURLs(args extractDataURLsArgs) error {
 	fmt.Printf("%s %s\n", wroteLabel(), args.varsOutputPath)
 	fmt.Printf("- extracted vars: %d\n", res.extractedVars)
 	fmt.Printf("- moved root custom props (min_len=%d): %d\n", args.minVarURLLen, res.movedCustomProps)
+	if res.assetsWritten > 0 {
+		fmt.Printf("- assets written: %d\n", res.assetsWritten)
+	}
 	return nil
 }

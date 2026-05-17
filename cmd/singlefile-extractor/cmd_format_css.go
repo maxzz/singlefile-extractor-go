@@ -45,7 +45,8 @@ func cmdFormatCSS(argv []string) int {
 			Footer: strings.TrimSpace(`
 Default behavior:
 - formats CSS with indentation
-- by default, also extracts url(data:...) into a separate vars file and rewrites the CSS to reference them`),
+- by default, also extracts url(data:...) into a separate vars file and rewrites the CSS to reference them
+- for data:image/... and data:font/... URLs, writes files into "assets/" and rewrites the vars to reference those files`),
 		})
 	}
 

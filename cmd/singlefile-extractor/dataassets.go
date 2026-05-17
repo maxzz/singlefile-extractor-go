@@ -68,7 +68,7 @@ func extractDataAssetsFromHTML(htmlText string, outHTMLPath string) (newHTML str
 			b.WriteString(tagText)
 			continue
 		}
-		if !strings.HasPrefix(strings.ToLower(parsed.MediaType), "image/") {
+		if !isSupportedDataAssetMediaType(parsed.MediaType) {
 			b.WriteString(tagText)
 			continue
 		}
@@ -102,6 +102,26 @@ func extractDataAssetsFromHTML(htmlText string, outHTMLPath string) (newHTML str
 	}
 
 	return b.String(), filesWritten, attrsReplaced, nil
+}
+
+func isSupportedDataAssetMediaType(mediaType string) bool {
+	mt := strings.ToLower(strings.TrimSpace(mediaType))
+	if strings.HasPrefix(mt, "image/") || strings.HasPrefix(mt, "font/") {
+		return true
+	}
+	switch mt {
+	case "application/font-woff",
+		"application/font-woff2",
+		"application/font-sfnt",
+		"application/x-font-woff",
+		"application/x-font-woff2",
+		"application/x-font-ttf",
+		"application/x-font-opentype",
+		"application/vnd.ms-fontobject":
+		return true
+	default:
+		return false
+	}
 }
 
 func parseDataURL(s string) (parsedDataURL, error) {
@@ -200,9 +220,26 @@ func extForMediaType(mediaType string) string {
 		return ".svg"
 	case "image/x-icon", "image/vnd.microsoft.icon":
 		return ".ico"
+	case "font/woff2", "application/font-woff2", "application/x-font-woff2":
+		return ".woff2"
+	case "font/woff", "application/font-woff", "application/x-font-woff":
+		return ".woff"
+	case "font/ttf", "application/x-font-ttf":
+		return ".ttf"
+	case "font/otf", "application/x-font-opentype":
+		return ".otf"
+	case "application/vnd.ms-fontobject":
+		return ".eot"
+	case "font/collection", "font/ttc":
+		return ".ttc"
+	case "font/sfnt", "application/font-sfnt":
+		return ".sfnt"
 	default:
 		if strings.HasPrefix(mt, "image/") {
 			return ".img"
+		}
+		if strings.HasPrefix(mt, "font/") {
+			return ".font"
 		}
 		return ".bin"
 	}
