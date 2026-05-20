@@ -6,6 +6,9 @@ import (
 	"strings"
 )
 
+// version is the current version of the utility, injected at build time using ldflags
+var version = "0.1.0"
+
 func main() {
 	code := run(os.Args[1:])
 	if code != 0 && shouldPrintExitStatusLine() {
@@ -21,6 +24,11 @@ func run(args []string) int {
 	}
 
 	cmd := args[0]
+	if cmd == "--version" || cmd == "-v" || cmd == "version" {
+		fmt.Printf("singlefile-extractor utilities (Go) v%s\n", version)
+		return 0
+	}
+
 	if strings.HasPrefix(cmd, "-") && hasValidInputFlag(args) {
 		// Default command: if no command is provided but --input/-i is, treat it as
 		// "format-html".

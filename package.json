@@ -1,6 +1,6 @@
 {
     "name": "singlefile-extractor-go",
-    "version": "0.1.0",
+    "version": "0.3.0",
     "description": "Extract an element + inline styles from SingleFile-saved HTML into a standalone HTML (Go port).",
     "private": true,
     "license": "MIT",
@@ -31,8 +31,11 @@
         "format:css": "npm run beautify:css",
         "format:css:help": "npm run beautify:css:help",
 
-        "build": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && go build -trimpath -o dist/singlefile-extractor ./cmd/singlefile-extractor",
-        "build:win": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && go build -trimpath -o dist/singlefile-extractor.exe ./cmd/singlefile-extractor",
+        "raw-build": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && go build -trimpath -o dist/singlefile-extractor ./cmd/singlefile-extractor",
+        "raw-build:win": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && go build -trimpath -o dist/singlefile-extractor.exe ./cmd/singlefile-extractor",
+
+        "build": "node build.js",
+        "build:win": "node build.js --win",
 
         "go:test": "go test ./...",
         "go:fmt": "go fmt ./..."

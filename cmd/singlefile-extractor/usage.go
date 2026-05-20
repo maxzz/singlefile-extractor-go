@@ -10,7 +10,7 @@ func isHelpArg(s string) bool {
 }
 
 func printRootUsage(w io.Writer) {
-	fmt.Fprintln(w, "singlefile-extractor utilities (Go)")
+	fmt.Fprintf(w, "singlefile-extractor utilities (Go) v%s\n", version)
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
 	fmt.Fprintln(w, "  singlefile-extractor <command> [options]")
