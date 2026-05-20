@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-function incrementMinorVersion(versionStr) {
+function incrementPatchVersion(versionStr) {
     const match = versionStr.match(/^(\d+)\.(\d+)(?:\.(\d+))?(.*)$/);
     if (!match) {
         throw new Error(`Invalid version format: ${versionStr}`);
@@ -12,50 +12,48 @@ function incrementMinorVersion(versionStr) {
     const patch = match[3] !== undefined ? parseInt(match[3], 10) : 0;
     const prerelease = match[4] || '';
 
-    const nextMinor = minor + 1;
-    const nextPatch = 0;
+    const nextPatch = patch + 1;
 
-    return `${major}.${nextMinor}.${nextPatch}${prerelease}`;
+    return `${major}.${minor}.${nextPatch}${prerelease}`;
 }
 
 try {
-    // 1. Ensure dist directory exists
-    const distDir = path.join(__dirname, 'dist');
-    if (!fs.existsSync(distDir)) {
-        fs.mkdirSync(distDir, { recursive: true });
-    }
-
-    // 2. Read package.json to get the current version
+    // 1. Read package.json to get the current version
     const packageJsonPath = path.join(__dirname, 'package.json');
     const packageJsonContent = fs.readFileSync(packageJsonPath, 'utf8');
     const packageJson = JSON.parse(packageJsonContent);
     const currentVersion = packageJson.version || '0.1.0';
 
-    // 3. Determine output file name
+    // 2. Increment the patch version BEFORE the build
+    const newVersion = incrementPatchVersion(currentVersion);
+    packageJson.version = newVersion;
+
+    // 3. Write the updated version back to package.json
+    const updatedPackageJsonContent = JSON.stringify(packageJson, null, 4) + '\n';
+    fs.writeFileSync(packageJsonPath, updatedPackageJsonContent, 'utf8');
+    console.log(`Incremented version in package.json from v${currentVersion} to v${newVersion} before build.`);
+
+    // 4. Ensure dist directory exists
+    const distDir = path.join(__dirname, 'dist');
+    if (!fs.existsSync(distDir)) {
+        fs.mkdirSync(distDir, { recursive: true });
+    }
+
+    // 5. Determine output file name
     const isWin = process.argv.includes('--win');
     const outputFilename = isWin ? 'singlefile-extractor.exe' : 'singlefile-extractor';
     const outputPath = path.join('dist', outputFilename);
 
-    console.log(`Building singlefile-extractor version v${currentVersion}...`);
+    console.log(`Building singlefile-extractor version v${newVersion}...`);
 
-    // 4. Run go build with current version in ldflags
-    const ldflags = `-X main.version=${currentVersion}`;
+    // 6. Run go build with the new version in ldflags
+    const ldflags = `-X main.version=${newVersion}`;
     const cmd = `go build -trimpath -ldflags "${ldflags}" -o "${outputPath}" ./cmd/singlefile-extractor`;
     
     console.log(`Executing: ${cmd}`);
     execSync(cmd, { stdio: 'inherit' });
 
-    console.log(`Successfully built ${outputPath} with version v${currentVersion}`);
-
-    // 5. Increment the version for the next build
-    const nextVersion = incrementMinorVersion(currentVersion);
-    packageJson.version = nextVersion;
-
-    // Preserve the exact indentation (using 4 spaces as seen in package.json)
-    const updatedPackageJsonContent = JSON.stringify(packageJson, null, 4) + '\n';
-    fs.writeFileSync(packageJsonPath, updatedPackageJsonContent, 'utf8');
-
-    console.log(`Incremented version in package.json from v${currentVersion} to v${nextVersion} for the next build.`);
+    console.log(`Successfully built ${outputPath} with version v${newVersion}`);
 } catch (error) {
     console.error('Build failed:', error.message);
     process.exit(1);

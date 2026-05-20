@@ -1,42 +1,42 @@
 {
     "name": "singlefile-extractor-go",
-    "version": "0.3.0",
+    "version": "0.1.0",
     "description": "Extract an element + inline styles from SingleFile-saved HTML into a standalone HTML (Go port).",
     "private": true,
     "license": "MIT",
     "scripts": {
         "extract": "go run ./cmd/singlefile-extractor extract",
         "extract:help": "go run ./cmd/singlefile-extractor extract --help",
-
+        "-------------------------------------------------1": "1",
         "moveout-css": "go run ./cmd/singlefile-extractor moveout-css",
         "moveout-css:help": "go run ./cmd/singlefile-extractor moveout-css --help",
-
+        "-------------------------------------------------2": "2",
         "beautify:html": "go run ./cmd/singlefile-extractor format-html",
         "beautify:html:help": "go run ./cmd/singlefile-extractor format-html --help",
-
+        "-------------------------------------------------3": "3",
         "beautify:css": "go run ./cmd/singlefile-extractor format-css",
         "beautify:css:help": "go run ./cmd/singlefile-extractor format-css --help",
-
+        "-------------------------------------------------4": "4",
         "extract:data-urls": "go run ./cmd/singlefile-extractor extract-data-urls",
         "extract:data-urls:help": "go run ./cmd/singlefile-extractor extract-data-urls --help",
-
+        "-------------------------------------------------5": "5",
         "beautify:smoke": "go run ./cmd/singlefile-extractor format-html --input tests-local/esig.smoke.html",
-
+        "-------------------------------------------------6": "6",
         "css": "npm run moveout-css",
         "css:help": "npm run moveout-css:help",
-
+        "-------------------------------------------------7": "7",
         "format": "npm run beautify:html",
         "format:help": "npm run beautify:html:help",
-
+        "-------------------------------------------------8": "8",
         "format:css": "npm run beautify:css",
         "format:css:help": "npm run beautify:css:help",
-
+        "-------------------------------------------------9": "9",
         "raw-build": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && go build -trimpath -o dist/singlefile-extractor ./cmd/singlefile-extractor",
         "raw-build:win": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && go build -trimpath -o dist/singlefile-extractor.exe ./cmd/singlefile-extractor",
-
+        "-------------------------------------------------10": "10",
         "build": "node build.js",
         "build:win": "node build.js --win",
-
+        "-------------------------------------------------11": "11",
         "go:test": "go test ./...",
         "go:fmt": "go fmt ./..."
     }
