@@ -247,7 +247,7 @@ This command locates and extracts a specific `<form>` element that has been nest
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'stepAfter' } } }%%
-graph TD
+flowchart TD
     %% Node Definitions
     A["Start: SingleFile HTML"]
     B["Parse iframe srcdoc attributes"]
@@ -261,19 +261,25 @@ graph TD
     J["Rebuild as standalone HTML document"]
     K["Write standalone HTML to --output"]
 
-    %% Connections
+    %% Direct vertical alignment for Main flow
     A --> B
     B --> C
-    C -->|No| D
-    D --> B
     C -->|Yes| E
     E --> F
-    F -->|Yes| G
     F -->|No| H
-    G --> H
     H --> I
     I --> J
     J --> K
+
+    %% Lateral branches (out of corners horizontally)
+    C -->|No| D
+    D --> B
+    F -->|Yes| G
+    G --> H
+
+    %% Invisible alignment links to force vertical stacking
+    D ~~~ E
+    G ~~~ I
 ```
 
 ### 2. Format HTML Pipeline (`format-html`)
@@ -282,7 +288,7 @@ This is the main pretty-printing and asset-extraction pipeline. By default, it m
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'stepAfter' } } }%%
-graph TD
+flowchart TD
     %% Node Definitions
     A["Start: HTML File"]
     B["Format HTML with indentation<br>and normalize whitespace"]
@@ -305,20 +311,13 @@ graph TD
     S["Write final formatted HTML"]
     T["Done"]
 
-    %% Connections
+    %% Direct vertical alignment for Main flow (Default pipeline)
     A --> B
     B --> C
-    
-    C -->|Yes| P
     C -->|No| D
-    
     D --> E
     E -->|Yes| F
-    E -->|No| F2
-    
     F --> H
-    F2 --> H
-    
     H --> I
     I --> J
     J --> K
@@ -327,13 +326,19 @@ graph TD
     M --> N
     N --> O
     O --> P
-    
     P -->|No| Q
-    P -->|Yes| S
-    
     Q --> R
     R --> S
     S --> T
+
+    %% Lateral branches (out of corners horizontally)
+    C -->|Yes| P
+    E -->|No| F2
+    F2 --> H
+    P -->|Yes| S
+
+    %% Invisible alignment links to force vertical stacking
+    F ~~~ F2
 ```
 
 
