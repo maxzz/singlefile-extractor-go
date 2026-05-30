@@ -1,6 +1,6 @@
 //go:build windows
 
-package main
+package utils
 
 import (
 	"os"
@@ -36,4 +36,3 @@ func enableVirtualTerminalProcessing(f *os.File) bool {
 	r1, _, _ = winSetConsoleModeProc.Call(uintptr(h), uintptr(newMode))
 	return r1 != 0
 }
-

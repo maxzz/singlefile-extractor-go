@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"fmt"
@@ -8,30 +8,30 @@ import (
 )
 
 const (
-	ansiReset  = "\x1b[0m"
-	ansiBold   = "\x1b[1m"
-	ansiDim    = "\x1b[2m"
-	ansiGray   = "\x1b[90m"
-	ansiRed    = "\x1b[31m"
-	ansiGreen  = "\x1b[32m"
-	ansiYellow = "\x1b[33m"
+	AnsiReset  = "\x1b[0m"
+	AnsiBold   = "\x1b[1m"
+	AnsiDim    = "\x1b[2m"
+	AnsiGray   = "\x1b[90m"
+	AnsiRed    = "\x1b[31m"
+	AnsiGreen  = "\x1b[32m"
+	AnsiYellow = "\x1b[33m"
 )
 
-type colorSupport struct {
-	stdout bool
-	stderr bool
+type ColorSupport struct {
+	Stdout bool
+	Stderr bool
 }
 
-var colors = detectColorSupport()
+var Colors = DetectColorSupport()
 
-func detectColorSupport() colorSupport {
-	return colorSupport{
-		stdout: supportsColor(os.Stdout),
-		stderr: supportsColor(os.Stderr),
+func DetectColorSupport() ColorSupport {
+	return ColorSupport{
+		Stdout: SupportsColor(os.Stdout),
+		Stderr: SupportsColor(os.Stderr),
 	}
 }
 
-func supportsColor(f *os.File) bool {
+func SupportsColor(f *os.File) bool {
 	// Standard opt-out.
 	if os.Getenv("NO_COLOR") != "" {
 		return false
@@ -86,20 +86,20 @@ func supportsColor(f *os.File) bool {
 	return true
 }
 
-func style(enabled bool, code string, s string) string {
+func Style(enabled bool, code string, s string) string {
 	if !enabled || code == "" || s == "" {
 		return s
 	}
-	return code + s + ansiReset
+	return code + s + AnsiReset
 }
 
-func wroteLabel() string { return style(colors.stdout, ansiBold+ansiGreen, "Wrote:") }
-func noteLabel() string  { return style(colors.stderr, ansiBold+ansiYellow, "Note:") }
-func errLabel() string   { return style(colors.stderr, ansiBold+ansiRed, "Error:") }
+func WroteLabel() string { return Style(Colors.Stdout, AnsiBold+AnsiGreen, "Wrote:") }
+func NoteLabel() string  { return Style(Colors.Stderr, AnsiBold+AnsiYellow, "Note:") }
+func ErrLabel() string   { return Style(Colors.Stderr, AnsiBold+AnsiRed, "Error:") }
 
-func warnText(s string) string { return style(colors.stderr, ansiYellow, s) }
-func dimText(s string) string  { return style(colors.stderr, ansiDim+ansiGray, s) }
+func WarnText(s string) string { return Style(Colors.Stderr, AnsiYellow, s) }
+func DimText(s string) string  { return Style(Colors.Stderr, AnsiDim+AnsiGray, s) }
 
-func exitStatusLine(code int) string {
-	return dimText(fmt.Sprintf("exit status %d", code))
+func ExitStatusLine(code int) string {
+	return DimText(fmt.Sprintf("exit status %d", code))
 }

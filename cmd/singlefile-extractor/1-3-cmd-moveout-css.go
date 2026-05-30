@@ -49,7 +49,7 @@ func cmdMoveoutCSS(argv []string) int {
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, warnText(err.Error()))
+		fmt.Fprintln(os.Stderr, utils.WarnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -60,7 +60,7 @@ func cmdMoveoutCSS(argv []string) int {
 
 	if strings.TrimSpace(inputPath) == "" {
 		msg := "Missing required --input. Pass --input <path> to an HTML file."
-		fmt.Fprintf(os.Stderr, "%s %s\n\n", noteLabel(), style(colors.stderr, ansiYellow, msg))
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", utils.NoteLabel(), utils.Style(utils.Colors.Stderr, utils.AnsiYellow, msg))
 		fs.Usage()
 		return 2
 	}
@@ -74,13 +74,13 @@ func cmdMoveoutCSS(argv []string) int {
 
 	htmlText, err := utils.ReadFileText(inputPath)
 	if err != nil {
-		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
+		fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
 	}
 
 	cssChunks := extractStyleContentsMoveout(htmlText)
 	if len(cssChunks) == 0 {
-		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("No <style> blocks found in: %s\n", inputPath)))
+		fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("No <style> blocks found in: %s\n", inputPath)))
 		return 1
 	}
 
@@ -88,7 +88,7 @@ func cmdMoveoutCSS(argv []string) int {
 	cssText = strings.TrimRight(cssText, "\r\n") + "\n"
 
 	if err := utils.WriteFileText(cssOutPath, cssText); err != nil {
-		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssOutPath, err)))
+		fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssOutPath, err)))
 		return 1
 	}
 
@@ -100,12 +100,12 @@ func cmdMoveoutCSS(argv []string) int {
 	htmlOut := insertStylesheetLinkSimple(htmlNoStyles, hrefUse)
 
 	if err := utils.WriteFileText(outputPath, htmlOut); err != nil {
-		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outputPath, err)))
+		fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outputPath, err)))
 		return 1
 	}
 
-	fmt.Printf("%s %s\n", wroteLabel(), outputPath)
-	fmt.Printf("%s %s\n", wroteLabel(), cssOutPath)
+	fmt.Printf("%s %s\n", utils.WroteLabel(), outputPath)
+	fmt.Printf("%s %s\n", utils.WroteLabel(), cssOutPath)
 	fmt.Printf("- extracted style blocks: %d\n", len(cssChunks))
 	fmt.Printf("- css chars: %d\n", len(cssText))
 	fmt.Printf("- link href: %s\n", hrefUse)
