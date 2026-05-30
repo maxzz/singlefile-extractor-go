@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"singlefile-extractor-go/cmd/singlefile-extractor/colors"
 	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
@@ -76,7 +77,7 @@ Default CSS pipeline:
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, utils.WarnText(err.Error()))
+		fmt.Fprintln(os.Stderr, colors.WarnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -87,13 +88,13 @@ Default CSS pipeline:
 
 	if strings.TrimSpace(inputPath) == "" {
 		msg := "Missing required --input. Pass --input <path> to an HTML file."
-		fmt.Fprintf(os.Stderr, "%s %s\n\n", utils.NoteLabel(), utils.Style(utils.Colors.Stderr, utils.AnsiYellow, msg))
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", colors.NoteLabel(), colors.Style(colors.Colors.Stderr, colors.AnsiYellow, msg))
 		fs.Usage()
 		return 2
 	}
 
 	if indentSpaces < 0 {
-		fmt.Fprintln(os.Stderr, utils.WarnText("--indent must be >= 0"))
+		fmt.Fprintln(os.Stderr, colors.WarnText("--indent must be >= 0"))
 		return 2
 	}
 	indentUnit := strings.Repeat(" ", indentSpaces)
@@ -105,7 +106,7 @@ Default CSS pipeline:
 
 	htmlText, err := utils.ReadFileText(inputPath)
 	if err != nil {
-		fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
+		fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
 	}
 
@@ -119,17 +120,17 @@ Default CSS pipeline:
 			var replaced int
 			finalHTML, assetsWritten, replaced, err = extractDataAssetsFromHTML(finalHTML, outPath)
 			if err != nil {
-				fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to extract data assets: %v\n", err)))
+				fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to extract data assets: %v\n", err)))
 				return 1
 			}
 			_ = replaced
 		}
 
 		if err := utils.WriteFileText(outPath, finalHTML); err != nil {
-			fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
+			fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
 			return 1
 		}
-		fmt.Printf("%s %s\n", utils.WroteLabel(), outPath)
+		fmt.Printf("%s %s\n", colors.WroteLabel(), outPath)
 		fmt.Printf("- input: %s\n", inputPath)
 		fmt.Printf("- indent: %d spaces\n", indentSpaces)
 		fmt.Printf("- chars: %d\n", len(finalHTML))
@@ -154,7 +155,7 @@ Default CSS pipeline:
 		cssText := strings.Join(styleChunks, "\n\n")
 		cssText = strings.TrimRight(cssText, "\r\n") + "\n"
 		if err := utils.WriteFileText(cssOut, cssText); err != nil {
-			fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssOut, err)))
+			fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssOut, err)))
 			return 1
 		}
 
@@ -194,11 +195,11 @@ Default CSS pipeline:
 
 	if len(cssFiles) > 0 {
 		if dataURLsMinVarURLLength < 0 {
-			fmt.Fprintln(os.Stderr, utils.WarnText("--data-urls-min-var-url-length must be >= 0"))
+			fmt.Fprintln(os.Stderr, colors.WarnText("--data-urls-min-var-url-length must be >= 0"))
 			return 2
 		}
 		if dataURLsVarsOutput != "" && len(cssFiles) > 1 {
-			fmt.Fprintln(os.Stderr, utils.WarnText("--data-urls-vars-output can only be used when processing a single CSS file."))
+			fmt.Fprintln(os.Stderr, colors.WarnText("--data-urls-vars-output can only be used when processing a single CSS file."))
 			return 2
 		}
 
@@ -219,7 +220,7 @@ Default CSS pipeline:
 				noImport:       dataURLsNoImport,
 				importHref:     dataURLsImportHref,
 			}); err != nil {
-				fmt.Fprintln(os.Stderr, utils.WarnText(err.Error()))
+				fmt.Fprintln(os.Stderr, colors.WarnText(err.Error()))
 				return 1
 			}
 			varsFiles = append(varsFiles, varsOut)
@@ -230,13 +231,13 @@ Default CSS pipeline:
 		for _, cssPath := range cssFiles {
 			cssText, err := utils.ReadFileText(cssPath)
 			if err != nil {
-				fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to read CSS: %s\n%v\n", cssPath, err)))
+				fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to read CSS: %s\n%v\n", cssPath, err)))
 				return 1
 			}
 			formattedCSS := formatCSS(cssText, cssIndent)
 			formattedCSS = fixCSSLintErrors(formattedCSS)
 			if err := utils.WriteFileText(cssPath, formattedCSS); err != nil {
-				fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssPath, err)))
+				fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssPath, err)))
 				return 1
 			}
 		}
@@ -246,18 +247,18 @@ Default CSS pipeline:
 		var replaced int
 		finalHTML, assetsWritten, replaced, err = extractDataAssetsFromHTML(finalHTML, outPath)
 		if err != nil {
-			fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to extract data assets: %v\n", err)))
+			fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to extract data assets: %v\n", err)))
 			return 1
 		}
 		_ = replaced
 	}
 
 	if err := utils.WriteFileText(outPath, finalHTML); err != nil {
-		fmt.Fprint(os.Stderr, utils.WarnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outPath, err)))
+		fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outPath, err)))
 		return 1
 	}
 
-	fmt.Printf("%s %s\n", utils.WroteLabel(), outPath)
+	fmt.Printf("%s %s\n", colors.WroteLabel(), outPath)
 	fmt.Printf("- input: %s\n", inputPath)
 	fmt.Printf("- indent: %d spaces\n", indentSpaces)
 	if len(cssFiles) > 0 {
