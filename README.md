@@ -338,9 +338,10 @@ flowchart TD
     P -->|Yes| S
 
     %% Invisible alignment links to force vertical stacking
-    F ~?? F2
+    F ~~~ F2
 ```
 
+![](assets/docs/format-html-pipeline.svg)
 
 <h2 id="install-clean-machine">Install (clean machine)</h2>
 
