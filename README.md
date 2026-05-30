@@ -246,7 +246,7 @@ This toolkit consists of several specialized pipelines designed to process Singl
 This command locates and extracts a specific `<form>` element that has been nested deep within `iframe[srcdoc]` elements by SingleFile.
 
 ```mermaid
-%%{ init: { 'flowchart': { 'curve': 'stepAfter' } } }%%
+%%{ init: { 'flowchart': { 'curve': 'stepAfter', 'nodeSpacing': 100, 'rankSpacing': 80 } } }%%
 flowchart TD
     %% Node Definitions
     A["Start: SingleFile HTML"]
@@ -287,7 +287,7 @@ flowchart TD
 This is the main pretty-printing and asset-extraction pipeline. By default, it moves inline styles to external files, pulls massive base64 `data:` URLs into variables/assets, and formats all code.
 
 ```mermaid
-%%{ init: { 'flowchart': { 'curve': 'stepAfter' } } }%%
+%%{ init: { 'flowchart': { 'curve': 'stepAfter', 'nodeSpacing': 100, 'rankSpacing': 80 } } }%%
 flowchart TD
     %% Node Definitions
     A["Start: HTML File"]
