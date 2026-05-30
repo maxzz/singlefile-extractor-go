@@ -68,7 +68,7 @@ Default behavior:
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, colors.WarnText(err.Error()))
+		fmt.Fprintln(os.Stderr, WarnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -79,13 +79,13 @@ Default behavior:
 
 	if strings.TrimSpace(inputPath) == "" {
 		msg := "Missing required --input. Pass --input <path> to a CSS file."
-		fmt.Fprintf(os.Stderr, "%s %s\n\n", colors.NoteLabel(), colors.Style(colors.Colors.Stderr, colors.AnsiYellow, msg))
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", NoteLabel(), Style(colors.Colors.Stderr, colors.AnsiYellow, msg))
 		fs.Usage()
 		return 2
 	}
 
 	if indentSpaces < 0 {
-		fmt.Fprintln(os.Stderr, colors.WarnText("--indent must be >= 0"))
+		fmt.Fprintln(os.Stderr, WarnText("--indent must be >= 0"))
 		return 2
 	}
 
@@ -96,7 +96,7 @@ Default behavior:
 
 	cssText, err := utils.ReadFileText(inputPath)
 	if err != nil {
-		fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
+		fmt.Fprint(os.Stderr, WarnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
 	}
 
@@ -104,12 +104,12 @@ Default behavior:
 	formatted := fixCSSLintErrors(formatCSS(cssText, indentUnit))
 
 	if err := utils.WriteFileText(outPath, formatted); err != nil {
-		fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
+		fmt.Fprint(os.Stderr, WarnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
 		return 1
 	}
 
 	if noExtractDataURLs {
-		fmt.Printf("%s %s\n", colors.WroteLabel(), outPath)
+		fmt.Printf("%s %s\n", WroteLabel(), outPath)
 		fmt.Printf("- input: %s\n", inputPath)
 		fmt.Printf("- indent: %d spaces\n", indentSpaces)
 		fmt.Printf("- chars: %d\n", len(formatted))
@@ -117,7 +117,7 @@ Default behavior:
 	}
 
 	if dataURLsMinVarURLLength < 0 {
-		fmt.Fprintln(os.Stderr, colors.WarnText("--data-urls-min-var-url-length must be >= 0"))
+		fmt.Fprintln(os.Stderr, WarnText("--data-urls-min-var-url-length must be >= 0"))
 		return 2
 	}
 
@@ -138,18 +138,18 @@ Default behavior:
 		noImport:       dataURLsNoImport,
 		importHref:     dataURLsImportHref,
 	}); err != nil {
-		fmt.Fprintln(os.Stderr, colors.WarnText(err.Error()))
+		fmt.Fprintln(os.Stderr, WarnText(err.Error()))
 		return 1
 	}
 
 	// Re-format after rewrite (extractor focuses on transformations, not formatting).
 	rewritten, err := utils.ReadFileText(outPath)
 	if err != nil {
-		fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to read rewritten CSS: %s\n%v\n", outPath, err)))
+		fmt.Fprint(os.Stderr, WarnText(fmt.Sprintf("Failed to read rewritten CSS: %s\n%v\n", outPath, err)))
 		return 1
 	}
 	if err := utils.WriteFileText(outPath, fixCSSLintErrors(formatCSS(rewritten, indentUnit))); err != nil {
-		fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to write formatted CSS: %s\n%v\n", outPath, err)))
+		fmt.Fprint(os.Stderr, WarnText(fmt.Sprintf("Failed to write formatted CSS: %s\n%v\n", outPath, err)))
 		return 1
 	}
 

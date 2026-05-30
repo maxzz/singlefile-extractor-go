@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"singlefile-extractor-go/cmd/singlefile-extractor/colors"
 )
 
 // version is the current version of the utility, injected at build time using ldflags
@@ -14,7 +12,7 @@ var version = "0.1.0"
 func main() {
 	code := run(os.Args[1:])
 	if code != 0 && shouldPrintExitStatusLine() {
-		fmt.Fprintln(os.Stderr, colors.ExitStatusLine(code))
+		fmt.Fprintln(os.Stderr, ExitStatusLine(code))
 	}
 	os.Exit(code)
 }
@@ -51,7 +49,7 @@ func run(args []string) int {
 	case "extract-data-urls":
 		return cmdExtractDataURLs(subArgs)
 	default:
-		fmt.Fprintf(os.Stderr, "%s %s\n\n", colors.ErrLabel(), cmd)
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", ErrLabel(), cmd)
 		printRootUsage(os.Stderr)
 		return 2
 	}

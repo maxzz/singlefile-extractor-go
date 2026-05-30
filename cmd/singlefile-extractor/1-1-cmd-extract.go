@@ -69,7 +69,7 @@ func cmdExtract(argv []string) int {
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, colors.WarnText(err.Error()))
+		fmt.Fprintln(os.Stderr, WarnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -80,7 +80,7 @@ func cmdExtract(argv []string) int {
 
 	if strings.TrimSpace(inputPath) == "" {
 		msg := "Missing required --input. Pass --input <path> to a SingleFile-saved HTML."
-		fmt.Fprintf(os.Stderr, "%s %s\n\n", colors.NoteLabel(), colors.Style(colors.Colors.Stderr, colors.AnsiYellow, msg))
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", NoteLabel(), Style(colors.Colors.Stderr, colors.AnsiYellow, msg))
 		fs.Usage()
 		return 2
 	}
@@ -91,7 +91,7 @@ func cmdExtract(argv []string) int {
 
 	outerHTML, err := utils.ReadFileText(inputPath)
 	if err != nil {
-		fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
+		fmt.Fprint(os.Stderr, WarnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
 	}
 
@@ -120,7 +120,7 @@ func cmdExtract(argv []string) int {
 		if contains != "" {
 			fmt.Fprintf(&b, "- contains filter: %q\n", contains)
 		}
-		fmt.Fprint(os.Stderr, colors.WarnText(b.String()))
+		fmt.Fprint(os.Stderr, WarnText(b.String()))
 		return 1
 	}
 
@@ -143,13 +143,13 @@ func cmdExtract(argv []string) int {
 			if len(matches) > 20 {
 				fmt.Fprintf(&b, "... and %d more\n", len(matches)-20)
 			}
-			fmt.Fprint(os.Stderr, colors.WarnText(b.String()))
+			fmt.Fprint(os.Stderr, WarnText(b.String()))
 			return 1
 		}
 
 		targetDoc = pickBestExtractMatch(matches)
 		fmt.Fprint(os.Stderr,
-			colors.NoteLabel()+" multiple matching documents found; auto-selected the deepest match.\n"+
+			NoteLabel()+" multiple matching documents found; auto-selected the deepest match.\n"+
 				"      Use --contains <substring> to force a different one if needed.\n"+
 				fmt.Sprintf("      Selected: %s\n", strings.Join(targetDoc.path, " > ")),
 		)
@@ -157,17 +157,17 @@ func cmdExtract(argv []string) int {
 
 	bodyOpen, styles, links, formHTML, err := extractFormAndStyles(targetDoc.html, formID)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, colors.WarnText(err.Error()))
+		fmt.Fprintln(os.Stderr, WarnText(err.Error()))
 		return 1
 	}
 	outputHTML := buildOutputHTML(bodyOpen, styles, links, formHTML)
 
 	if err := utils.WriteFileText(outputPath, outputHTML); err != nil {
-		fmt.Fprint(os.Stderr, colors.WarnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outputPath, err)))
+		fmt.Fprint(os.Stderr, WarnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outputPath, err)))
 		return 1
 	}
 
-	fmt.Printf("%s %s\n", colors.WroteLabel(), outputPath)
+	fmt.Printf("%s %s\n", WroteLabel(), outputPath)
 	fmt.Printf("- extracted form id: %s\n", formID)
 	fmt.Printf("- source iframe path: %s\n", strings.Join(targetDoc.path, " > "))
 	fmt.Printf("- styles: %d\n", len(styles))

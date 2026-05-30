@@ -67,7 +67,7 @@ func cmdExtractDataURLs(argv []string) int {
 	fs.BoolVar(&showHelp, "h", false, "Show help.")
 
 	if err := fs.Parse(argv); err != nil {
-		fmt.Fprintln(os.Stderr, colors.WarnText(err.Error()))
+		fmt.Fprintln(os.Stderr, WarnText(err.Error()))
 		fs.Usage()
 		return 2
 	}
@@ -78,7 +78,7 @@ func cmdExtractDataURLs(argv []string) int {
 
 	if strings.TrimSpace(inputPath) == "" {
 		msg := "Missing required --input. Pass --input <path> to a CSS file."
-		fmt.Fprintf(os.Stderr, "%s %s\n\n", colors.NoteLabel(), colors.Style(colors.Colors.Stderr, colors.AnsiYellow, msg))
+		fmt.Fprintf(os.Stderr, "%s %s\n\n", NoteLabel(), Style(colors.Colors.Stderr, colors.AnsiYellow, msg))
 		fs.Usage()
 		return 2
 	}
@@ -107,7 +107,7 @@ func cmdExtractDataURLs(argv []string) int {
 	}
 
 	if err := runExtractDataURLs(args); err != nil {
-		fmt.Fprintln(os.Stderr, colors.WarnText(err.Error()))
+		fmt.Fprintln(os.Stderr, WarnText(err.Error()))
 		return 1
 	}
 	return 0
@@ -139,8 +139,8 @@ func runExtractDataURLs(args extractDataURLsArgs) error {
 		return fmt.Errorf("failed to write: %s\n%w", args.varsOutputPath, err)
 	}
 
-	fmt.Printf("%s %s\n", colors.WroteLabel(), args.outputPath)
-	fmt.Printf("%s %s\n", colors.WroteLabel(), args.varsOutputPath)
+	fmt.Printf("%s %s\n", WroteLabel(), args.outputPath)
+	fmt.Printf("%s %s\n", WroteLabel(), args.varsOutputPath)
 	fmt.Printf("- extracted vars: %d\n", res.extractedVars)
 	fmt.Printf("- moved root custom props (min_len=%d): %d\n", args.minVarURLLen, res.movedCustomProps)
 	if res.assetsWritten > 0 {

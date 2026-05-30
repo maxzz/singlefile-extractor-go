@@ -1,7 +1,6 @@
 package colors
 
 import (
-	"fmt"
 	"os"
 	"runtime"
 	"strings"
@@ -86,20 +85,3 @@ func SupportsColor(f *os.File) bool {
 	return true
 }
 
-func Style(enabled bool, code string, s string) string {
-	if !enabled || code == "" || s == "" {
-		return s
-	}
-	return code + s + AnsiReset
-}
-
-func WroteLabel() string { return Style(Colors.Stdout, AnsiBold+AnsiGreen, "Wrote:") }
-func NoteLabel() string  { return Style(Colors.Stderr, AnsiBold+AnsiYellow, "Note:") }
-func ErrLabel() string   { return Style(Colors.Stderr, AnsiBold+AnsiRed, "Error:") }
-
-func WarnText(s string) string { return Style(Colors.Stderr, AnsiYellow, s) }
-func DimText(s string) string  { return Style(Colors.Stderr, AnsiDim+AnsiGray, s) }
-
-func ExitStatusLine(code int) string {
-	return DimText(fmt.Sprintf("exit status %d", code))
-}
