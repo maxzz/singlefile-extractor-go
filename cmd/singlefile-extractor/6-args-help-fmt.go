@@ -87,4 +87,3 @@ func formatOptionLeft(opt optionHelp) string {
 	}
 	return left
 }
-

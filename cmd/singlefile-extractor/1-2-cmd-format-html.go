@@ -61,7 +61,7 @@ Default CSS pipeline:
 	fs.StringVar(&inputPath, "input", "", "Path to the HTML file to format. (required)")
 	fs.StringVar(&inputPath, "i", "", "Path to the HTML file to format. (required)")
 	fs.StringVar(&outputPath, "output", "", `Where to write the formatted HTML (default: next to --input with suffix "_formatted").`)
-	fs.StringVar(&outputPath, "o", "", `Where to write the formatted HTML (default: next to --input with suffix "_formatted").`)
+	fs.StringVar(&outputPath, "o", "", `Where to write the rewritten HTML (default: next to --input with suffix "_formatted").`)
 	fs.IntVar(&indentSpaces, "indent", 2, "Spaces per indent level (default: 2).")
 	fs.BoolVar(&noCSSPipeline, "no-css-pipeline", false, "Disable the default CSS pipeline (format HTML only).")
 	fs.BoolVar(&noExtractDataAssets, "no-extract-data-assets", false, `Disable extracting data: images/fonts from <link href> and <img src> into files under "assets/" next to the output HTML.`)

@@ -106,4 +106,3 @@ func replaceTagAttrValue(tagText string, attrName string, newValue string) (stri
 
 	return tagText, false
 }
-

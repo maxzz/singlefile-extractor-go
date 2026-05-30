@@ -255,4 +255,3 @@ func shortSHA256Hex(b []byte, nHex int) string {
 	}
 	return hex[:nHex]
 }
-

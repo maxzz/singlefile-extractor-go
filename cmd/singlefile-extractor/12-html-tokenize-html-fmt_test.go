@@ -8,7 +8,7 @@ import (
 )
 
 // format-html keeps <!-- ... --> comments in the output. Verified on tests/extra_field.html (the SingleFile header comment is still present in tests/extra_field_formatted.html):
-// I also added a small regression test in cmd/singlefile-extractor/htmlfmt_test.go to prevent this from breaking later.
+// I also added a small regression test in cmd/singlefile-extractor/12-html-tokenize-html-fmt_test.go to prevent this from breaking later.
 
 func TestFormatHTML_PreservesHTMLComments(t *testing.T) {
 	in := "<!DOCTYPE html> <html><!--\n Page saved with SingleFile \n--><head><title>x</title></head></html>"
