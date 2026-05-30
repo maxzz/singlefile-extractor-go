@@ -13,6 +13,7 @@ This project is a Go port of the original Python scripts. The primary entrypoint
 - Command [`format-css`](#format-css)
 - Command [`extract-data-urls`](#extract-data-urls)
 - Command [`extract`](#extract)
+- [`How it works`](#how-it-works)
 - [`Install (clean machine)`](#install-clean-machine)
 
 
@@ -232,6 +233,70 @@ Get-ChildItem -Filter *.html | ForEach-Object {
   go run ./cmd/singlefile-extractor extract --input $_.FullName --output $out --form-id "aspnetForm"
 }
 ```
+
+
+<h2 id="how-it-works">How it works</h2>
+
+<!-- <hr style="border:none;border-top:2px solid #1a1a1a;margin:0 0 0.85em;" /> -->
+
+This toolkit consists of several specialized pipelines designed to process SingleFile-saved web pages. Below is the execution flow of the two primary operations: **Extract** and **Format HTML (with CSS/Asset Pipeline)**.
+
+### 1. Extract Pipeline (`extract`)
+
+This command locates and extracts a specific `<form>` element that has been nested deep within `iframe[srcdoc]` elements by SingleFile.
+
+```mermaid
+graph TD
+    A[Start: SingleFile HTML] --> B[Parse iframe srcdoc attributes]
+    B --> C{Form ID found in srcdoc?}
+    C -->|No| D["Recurse into nested iframe srcdocs<br>up to --max-depth"]
+    D --> B
+    C -->|Yes| E[Collect candidate iframe documents]
+    E --> F{Multiple matches?}
+    F -->|Yes| G["Select deepest match or<br>filter via --contains"]
+    F -->|No| H[Set target iframe document]
+    G --> H
+    H --> I[Extract body attributes, stylesheets, style blocks, and form element]
+    I --> J[Rebuild as standalone HTML document]
+    J --> K["Write standalone HTML to --output"]
+```
+
+### 2. Format HTML Pipeline (`format-html`)
+
+This is the main pretty-printing and asset-extraction pipeline. By default, it moves inline styles to external files, pulls massive base64 `data:` URLs into variables/assets, and formats all code.
+
+```mermaid
+graph TD
+    A[Start: HTML File] --> B["Format HTML with indentation<br>and normalize whitespace"]
+    B --> C{"--no-css-pipeline?"}
+    C -->|Yes (Skip)| G
+    C -->|No (Default)| D[Extract inline style blocks]
+    D --> E{Style blocks found?}
+    
+    E -->|Yes| F["Write to CSS file<br>Replace style blocks with link rel=stylesheet"]
+    E -->|No| F2[Scan HTML for existing linked local CSS files]
+    
+    F --> H[For each CSS file]
+    F2 --> H
+    
+    H --> I["Scan CSS for url(data:...) base64 assets"]
+    I --> J[Extract data URLs to a separate custom properties vars file]
+    J --> K["Rewrite original CSS to use var(--...)"]
+    K --> L["Inject @import of vars file into original CSS"]
+    L --> M["Extract data:image & data:font to real files in assets/"]
+    M --> N["Update vars file to use url('assets/...')"]
+    N --> O[Format & beautify rewritten CSS]
+    O --> G
+    
+    G --> P{"--no-extract-data-assets?"}
+    P -->|No (Default)| Q["Scan HTML for remaining data: image/font assets"]
+    Q --> R["Write assets to assets/ folder and rewrite HTML href/src tags"]
+    R --> S[Write final formatted HTML]
+    P -->|Yes (Skip)| S
+    
+    S --> T[Done]
+```
+
 
 <h2 id="install-clean-machine">Install (clean machine)</h2>
 
