@@ -247,18 +247,32 @@ This command locates and extracts a specific `<form>` element that has been nest
 
 ```mermaid
 graph TD
-    A[Start: SingleFile HTML] --> B[Parse iframe srcdoc attributes]
-    B --> C{Form ID found in srcdoc?}
-    C -->|No| D["Recurse into nested iframe srcdocs<br>up to --max-depth"]
+    %% Node Definitions
+    A["Start: SingleFile HTML"]
+    B["Parse iframe srcdoc attributes"]
+    C{"Form ID found in srcdoc?"}
+    D["Recurse into nested iframe srcdocs<br>up to --max-depth"]
+    E["Collect candidate iframe documents"]
+    F{"Multiple matches?"}
+    G["Select deepest match or<br>filter via --contains"]
+    H["Set target iframe document"]
+    I["Extract body attributes, stylesheets, style blocks, and form element"]
+    J["Rebuild as standalone HTML document"]
+    K["Write standalone HTML to --output"]
+
+    %% Connections
+    A --> B
+    B --> C
+    C -->|No| D
     D --> B
-    C -->|Yes| E[Collect candidate iframe documents]
-    E --> F{Multiple matches?}
-    F -->|Yes| G["Select deepest match or<br>filter via --contains"]
-    F -->|No| H[Set target iframe document]
+    C -->|Yes| E
+    E --> F
+    F -->|Yes| G
+    F -->|No| H
     G --> H
-    H --> I[Extract body attributes, stylesheets, style blocks, and form element]
-    I --> J[Rebuild as standalone HTML document]
-    J --> K["Write standalone HTML to --output"]
+    H --> I
+    I --> J
+    J --> K
 ```
 
 ### 2. Format HTML Pipeline (`format-html`)
@@ -267,34 +281,58 @@ This is the main pretty-printing and asset-extraction pipeline. By default, it m
 
 ```mermaid
 graph TD
-    A[Start: HTML File] --> B["Format HTML with indentation<br>and normalize whitespace"]
-    B --> C{"--no-css-pipeline?"}
-    C -->|Yes (Skip)| G
-    C -->|No (Default)| D[Extract inline style blocks]
-    D --> E{Style blocks found?}
+    %% Node Definitions
+    A["Start: HTML File"]
+    B["Format HTML with indentation<br>and normalize whitespace"]
+    C{"--no-css-pipeline?"}
+    D["Extract inline style blocks"]
+    E{"Style blocks found?"}
+    F["Write to CSS file<br>Replace style blocks with link rel=stylesheet"]
+    F2["Scan HTML for existing linked local CSS files"]
+    H["For each CSS file"]
+    I["Scan CSS for url(data:...) base64 assets"]
+    J["Extract data URLs to a separate custom properties vars file"]
+    K["Rewrite original CSS to use var(--...)"]
+    L["Inject @import of vars file into original CSS"]
+    M["Extract data:image and data:font to real files in assets/"]
+    N["Update vars file to use url('assets/...')"]
+    O["Format and beautify rewritten CSS"]
+    P{"--no-extract-data-assets?"}
+    Q["Scan HTML for remaining data: image/font assets"]
+    R["Write assets to assets/ folder and rewrite HTML href/src tags"]
+    S["Write final formatted HTML"]
+    T["Done"]
+
+    %% Connections
+    A --> B
+    B --> C
     
-    E -->|Yes| F["Write to CSS file<br>Replace style blocks with link rel=stylesheet"]
-    E -->|No| F2[Scan HTML for existing linked local CSS files]
+    C -->|Yes| G
+    C -->|No| D
     
-    F --> H[For each CSS file]
+    D --> E
+    E -->|Yes| F
+    E -->|No| F2
+    
+    F --> H
     F2 --> H
     
-    H --> I["Scan CSS for url(data:...) base64 assets"]
-    I --> J[Extract data URLs to a separate custom properties vars file]
-    J --> K["Rewrite original CSS to use var(--...)"]
-    K --> L["Inject @import of vars file into original CSS"]
-    L --> M["Extract data:image & data:font to real files in assets/"]
-    M --> N["Update vars file to use url('assets/...')"]
-    N --> O[Format & beautify rewritten CSS]
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+    L --> M
+    M --> N
+    N --> O
     O --> G
     
-    G --> P{"--no-extract-data-assets?"}
-    P -->|No (Default)| Q["Scan HTML for remaining data: image/font assets"]
-    Q --> R["Write assets to assets/ folder and rewrite HTML href/src tags"]
-    R --> S[Write final formatted HTML]
-    P -->|Yes (Skip)| S
+    G --> P
+    P -->|No| Q
+    P -->|Yes| S
     
-    S --> T[Done]
+    Q --> R
+    R --> S
+    S --> T
 ```
 
 
