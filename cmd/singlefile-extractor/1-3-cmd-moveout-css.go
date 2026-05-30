@@ -66,10 +66,10 @@ func cmdMoveoutCSS(argv []string) int {
 	}
 
 	if outputPath == "" {
-		outputPath = defaultMoveoutCSSOutputHTMLPath(inputPath)
+		outputPath = utils.DefaultMoveoutCSSOutputHTMLPath(inputPath)
 	}
 	if cssOutPath == "" {
-		cssOutPath = replaceExt(outputPath, ".css")
+		cssOutPath = utils.ReplaceExt(outputPath, ".css")
 	}
 
 	htmlText, err := utils.ReadFileText(inputPath)

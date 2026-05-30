@@ -853,7 +853,7 @@ func rewriteCSSExtractDataURLs(
 
 				if !writtenNames[fileName] {
 					filePath := filepath.Join(assetsDir, fileName)
-					if !fileExists(filePath) {
+					if !utils.FileExists(filePath) {
 						if werr := utils.WriteFileBytes(filePath, parsed.Data); werr != nil {
 							return "", werr
 						}

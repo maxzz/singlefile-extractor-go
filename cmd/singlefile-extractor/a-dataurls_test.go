@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+
+	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
 func TestRewriteCSSExtractDataURLs_WritesAssetsForImagesAndFonts(t *testing.T) {
@@ -40,7 +42,7 @@ func TestRewriteCSSExtractDataURLs_WritesAssetsForImagesAndFonts(t *testing.T) {
 
 	for _, rel := range matches {
 		p := filepath.Join(outDir, filepath.FromSlash(rel))
-		if !fileExists(p) {
+		if !utils.FileExists(p) {
 			t.Fatalf("expected asset file to exist: %s", p)
 		}
 	}

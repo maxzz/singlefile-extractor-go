@@ -100,7 +100,7 @@ Default CSS pipeline:
 
 	outPath := outputPath
 	if outPath == "" {
-		outPath = defaultFormattedPath(inputPath)
+		outPath = utils.DefaultFormattedPath(inputPath)
 	}
 
 	htmlText, err := utils.ReadFileText(inputPath)
@@ -148,7 +148,7 @@ Default CSS pipeline:
 	if len(styleChunks) > 0 {
 		cssOut := cssOutputPath
 		if cssOut == "" {
-			cssOut = replaceExt(outPath, ".css")
+			cssOut = utils.ReplaceExt(outPath, ".css")
 		}
 
 		cssText := strings.Join(styleChunks, "\n\n")

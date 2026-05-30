@@ -85,7 +85,7 @@ func cmdExtract(argv []string) int {
 	}
 
 	if strings.TrimSpace(outputPath) == "" {
-		outputPath = defaultExtractOutputPath(inputPath)
+		outputPath = utils.DefaultExtractOutputPath(inputPath)
 	}
 
 	outerHTML, err := utils.ReadFileText(inputPath)

@@ -1,16 +1,16 @@
-package main
+package utils
 
 import (
 	"os"
 	"path/filepath"
 )
 
-func fileExists(path string) bool {
+func FileExists(path string) bool {
 	info, err := os.Stat(path)
 	return err == nil && !info.IsDir()
 }
 
-func repoRoot() string {
+func RepoRoot() string {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return "."
@@ -19,7 +19,7 @@ func repoRoot() string {
 	dir := cwd
 	for {
 		// Heuristic: repo root contains these files.
-		if fileExists(filepath.Join(dir, "package.json")) && fileExists(filepath.Join(dir, "README.md")) {
+		if FileExists(filepath.Join(dir, "package.json")) && FileExists(filepath.Join(dir, "README.md")) {
 			return dir
 		}
 		parent := filepath.Dir(dir)

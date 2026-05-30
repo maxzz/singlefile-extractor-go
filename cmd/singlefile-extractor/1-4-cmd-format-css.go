@@ -90,7 +90,7 @@ Default behavior:
 
 	outPath := outputPath
 	if outPath == "" {
-		outPath = defaultFormattedPath(inputPath)
+		outPath = utils.DefaultFormattedPath(inputPath)
 	}
 
 	cssText, err := utils.ReadFileText(inputPath)
