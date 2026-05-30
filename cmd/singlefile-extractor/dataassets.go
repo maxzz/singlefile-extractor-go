@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"unicode"
+
+	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
 type parsedDataURL struct {
@@ -83,7 +85,7 @@ func extractDataAssetsFromHTML(htmlText string, outHTMLPath string) (newHTML str
 		if !writtenNames[fileName] {
 			filePath := filepath.Join(assetsDir, fileName)
 			if !fileExists(filePath) {
-				if werr := writeFileBytes(filePath, parsed.Data); werr != nil {
+				if werr := utils.WriteFileBytes(filePath, parsed.Data); werr != nil {
 					return "", 0, 0, werr
 				}
 				filesWritten++

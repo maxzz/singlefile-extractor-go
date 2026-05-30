@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
 type dataURLHit struct {
@@ -828,7 +830,9 @@ func rewriteCSSExtractDataURLs(
 				}
 
 				if ref, ok := keyToAssetRef[d.key]; ok {
-					b.WriteString(`url("` + ref + `")`)
+					b.WriteString(`url("`)
+					b.WriteString(ref)
+					b.WriteString(`")`)
 					last = h.end
 					continue
 				}
@@ -850,7 +854,7 @@ func rewriteCSSExtractDataURLs(
 				if !writtenNames[fileName] {
 					filePath := filepath.Join(assetsDir, fileName)
 					if !fileExists(filePath) {
-						if werr := writeFileBytes(filePath, parsed.Data); werr != nil {
+						if werr := utils.WriteFileBytes(filePath, parsed.Data); werr != nil {
 							return "", werr
 						}
 						assetsWritten++
@@ -860,7 +864,9 @@ func rewriteCSSExtractDataURLs(
 
 				ref := filepath.ToSlash(filepath.Join("assets", fileName))
 				keyToAssetRef[d.key] = ref
-				b.WriteString(`url("` + ref + `")`)
+				b.WriteString(`url("`)
+				b.WriteString(ref)
+				b.WriteString(`")`)
 
 				last = h.end
 			}

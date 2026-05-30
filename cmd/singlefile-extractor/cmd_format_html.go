@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
 func cmdFormatHTML(argv []string) int {
@@ -101,7 +103,7 @@ Default CSS pipeline:
 		outPath = defaultFormattedPath(inputPath)
 	}
 
-	htmlText, err := readFileText(inputPath)
+	htmlText, err := utils.ReadFileText(inputPath)
 	if err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
@@ -123,7 +125,7 @@ Default CSS pipeline:
 			_ = replaced
 		}
 
-		if err := writeFileText(outPath, finalHTML); err != nil {
+		if err := utils.WriteFileText(outPath, finalHTML); err != nil {
 			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
 			return 1
 		}
@@ -151,7 +153,7 @@ Default CSS pipeline:
 
 		cssText := strings.Join(styleChunks, "\n\n")
 		cssText = strings.TrimRight(cssText, "\r\n") + "\n"
-		if err := writeFileText(cssOut, cssText); err != nil {
+		if err := utils.WriteFileText(cssOut, cssText); err != nil {
 			fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssOut, err)))
 			return 1
 		}
@@ -226,14 +228,14 @@ Default CSS pipeline:
 		// Beautify rewritten CSS (extract-data-urls focuses on transformations, not formatting).
 		cssIndent := strings.Repeat(" ", indentSpaces)
 		for _, cssPath := range cssFiles {
-			cssText, err := readFileText(cssPath)
+			cssText, err := utils.ReadFileText(cssPath)
 			if err != nil {
 				fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read CSS: %s\n%v\n", cssPath, err)))
 				return 1
 			}
 			formattedCSS := formatCSS(cssText, cssIndent)
 			formattedCSS = fixCSSLintErrors(formattedCSS)
-			if err := writeFileText(cssPath, formattedCSS); err != nil {
+			if err := utils.WriteFileText(cssPath, formattedCSS); err != nil {
 				fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssPath, err)))
 				return 1
 			}
@@ -250,7 +252,7 @@ Default CSS pipeline:
 		_ = replaced
 	}
 
-	if err := writeFileText(outPath, finalHTML); err != nil {
+	if err := utils.WriteFileText(outPath, finalHTML); err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outPath, err)))
 		return 1
 	}

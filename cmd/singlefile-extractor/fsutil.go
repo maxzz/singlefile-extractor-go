@@ -10,14 +10,6 @@ func fileExists(path string) bool {
 	return err == nil && !info.IsDir()
 }
 
-func ensureParentDir(path string) error {
-	dir := filepath.Dir(path)
-	if dir == "." || dir == "" {
-		return nil
-	}
-	return os.MkdirAll(dir, 0o755)
-}
-
 func repoRoot() string {
 	cwd, err := os.Getwd()
 	if err != nil {

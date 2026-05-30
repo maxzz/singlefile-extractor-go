@@ -6,6 +6,8 @@ import (
 	"os"
 	"regexp"
 	"strings"
+
+	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
 type iframeSrcdoc struct {
@@ -86,7 +88,7 @@ func cmdExtract(argv []string) int {
 		outputPath = defaultExtractOutputPath(inputPath)
 	}
 
-	outerHTML, err := readFileText(inputPath)
+	outerHTML, err := utils.ReadFileText(inputPath)
 	if err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
@@ -159,7 +161,7 @@ func cmdExtract(argv []string) int {
 	}
 	outputHTML := buildOutputHTML(bodyOpen, styles, links, formHTML)
 
-	if err := writeFileText(outputPath, outputHTML); err != nil {
+	if err := utils.WriteFileText(outputPath, outputHTML); err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outputPath, err)))
 		return 1
 	}

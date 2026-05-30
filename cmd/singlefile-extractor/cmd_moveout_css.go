@@ -6,6 +6,8 @@ import (
 	"os"
 	"regexp"
 	"strings"
+
+	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
 var moveoutStyleBlockRe = regexp.MustCompile(`(?is)<style\b[^>]*>(.*?)</style>`)
@@ -70,7 +72,7 @@ func cmdMoveoutCSS(argv []string) int {
 		cssOutPath = replaceExt(outputPath, ".css")
 	}
 
-	htmlText, err := readFileText(inputPath)
+	htmlText, err := utils.ReadFileText(inputPath)
 	if err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
@@ -85,7 +87,7 @@ func cmdMoveoutCSS(argv []string) int {
 	cssText := strings.Join(cssChunks, "\n\n")
 	cssText = strings.TrimRight(cssText, "\r\n") + "\n"
 
-	if err := writeFileText(cssOutPath, cssText); err != nil {
+	if err := utils.WriteFileText(cssOutPath, cssText); err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write CSS: %s\n%v\n", cssOutPath, err)))
 		return 1
 	}
@@ -97,7 +99,7 @@ func cmdMoveoutCSS(argv []string) int {
 	}
 	htmlOut := insertStylesheetLinkSimple(htmlNoStyles, hrefUse)
 
-	if err := writeFileText(outputPath, htmlOut); err != nil {
+	if err := utils.WriteFileText(outputPath, htmlOut); err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write HTML: %s\n%v\n", outputPath, err)))
 		return 1
 	}

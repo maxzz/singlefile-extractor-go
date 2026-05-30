@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
 func cmdFormatCSS(argv []string) int {
@@ -91,7 +93,7 @@ Default behavior:
 		outPath = defaultFormattedPath(inputPath)
 	}
 
-	cssText, err := readFileText(inputPath)
+	cssText, err := utils.ReadFileText(inputPath)
 	if err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read input: %s\n%v\n", inputPath, err)))
 		return 1
@@ -100,7 +102,7 @@ Default behavior:
 	indentUnit := strings.Repeat(" ", indentSpaces)
 	formatted := fixCSSLintErrors(formatCSS(cssText, indentUnit))
 
-	if err := writeFileText(outPath, formatted); err != nil {
+	if err := utils.WriteFileText(outPath, formatted); err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write output: %s\n%v\n", outPath, err)))
 		return 1
 	}
@@ -140,12 +142,12 @@ Default behavior:
 	}
 
 	// Re-format after rewrite (extractor focuses on transformations, not formatting).
-	rewritten, err := readFileText(outPath)
+	rewritten, err := utils.ReadFileText(outPath)
 	if err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to read rewritten CSS: %s\n%v\n", outPath, err)))
 		return 1
 	}
-	if err := writeFileText(outPath, fixCSSLintErrors(formatCSS(rewritten, indentUnit))); err != nil {
+	if err := utils.WriteFileText(outPath, fixCSSLintErrors(formatCSS(rewritten, indentUnit))); err != nil {
 		fmt.Fprint(os.Stderr, warnText(fmt.Sprintf("Failed to write formatted CSS: %s\n%v\n", outPath, err)))
 		return 1
 	}

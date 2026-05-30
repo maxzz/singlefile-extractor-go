@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"singlefile-extractor-go/cmd/singlefile-extractor/utils"
 )
 
 type extractDataURLsArgs struct {
@@ -111,7 +113,7 @@ func cmdExtractDataURLs(argv []string) int {
 }
 
 func runExtractDataURLs(args extractDataURLsArgs) error {
-	cssText, err := readFileText(args.inputPath)
+	cssText, err := utils.ReadFileText(args.inputPath)
 	if err != nil {
 		return fmt.Errorf("failed to read input: %s\n%w", args.inputPath, err)
 	}
@@ -129,10 +131,10 @@ func runExtractDataURLs(args extractDataURLsArgs) error {
 		return err
 	}
 
-	if err := writeFileText(args.outputPath, res.rewrittenCSS); err != nil {
+	if err := utils.WriteFileText(args.outputPath, res.rewrittenCSS); err != nil {
 		return fmt.Errorf("failed to write: %s\n%w", args.outputPath, err)
 	}
-	if err := writeFileText(args.varsOutputPath, res.varsCSS); err != nil {
+	if err := utils.WriteFileText(args.varsOutputPath, res.varsCSS); err != nil {
 		return fmt.Errorf("failed to write: %s\n%w", args.varsOutputPath, err)
 	}
 
